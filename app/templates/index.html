@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Hipotecas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .double-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .double-input input {
+            flex: 1;
+        }
+
+        .double-input input:last-child {
+            width: 60px;
+            flex: 0 0 60px;
+        }
+
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #3367d6;
+        }
+
+        #results,
+        #chart-container {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Calculadora de Hipotecas</h1>
+        <form id="mortgage-form">
+            <div class="input-group">
+                <label for="price">Precio de la vivienda (€):</label>
+                <input type="number" id="price" name="price" required>
+            </div>
+
+            <div class="input-group">
+                <label for="savings">Ahorros:</label>
+                <div class="double-input">
+                    <input type="number" id="savings" name="savings" required>
+                    <input type="number" id="savings_percent" name="savings_percent" placeholder="%" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="annual_rate_percent">Tasa de interés anual (%):</label>
+                <input type="number" id="annual_rate_percent" name="annual_rate_percent" step="0.01" required>
+            </div>
+
+            <div class="input-group">
+                <label for="timeframe_years">Plazo (años):</label>
+                <select id="timeframe_years" name="timeframe_years" required>
+                    <option value="15">15 years</option>
+                    <option value="20">20 years</option>
+                    <option value="25">25 years</option>
+                    <option value="30" selected>30 years</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="location">Ubicación:</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+
+            <div class="input-group">
+                <label for="is_second_hand">¿Vivienda de segunda mano?</label>
+                <select id="is_second_hand" name="is_second_hand">
+                    <option value="false">No</option>
+                    <option value="true">Sí</option>
+                </select>
+            </div>
+
+            <button type="submit">Actualizar</button>
+        </form>
+
+        <div id="results">
+            <!-- Results will be populated here -->
+        </div>
+        <div id="chart-container">
+            <canvas id="results-chart"></canvas>
+        </div>
+    </div>
+
+    <script src="../static/script.js"></script>
+</body>
+
+</html>

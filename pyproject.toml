@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "mortgage-calculator"
+version = "0.1.0"
+description = "A lightweight mortgage calculator app, designed for a spanish mortgage"
+authors = ["Miguel Blanco Marcos <miguel.blanco.marcos@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.111.1"
+uvicorn = "^0.30.3"
+Jinja2 = "^3.1.4"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.5.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
