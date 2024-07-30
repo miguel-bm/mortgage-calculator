@@ -1,11 +1,9 @@
-// Placeholder data
 const placeholderData = {
     price: 200000,
     savings: 40000,
     annual_rate_percent: 3.5,
     timeframe_years: 30,
-    location: "Madrid",
-    is_savings_percent: false,
+    location: "madrid",
     is_second_hand: false
 };
 
@@ -69,30 +67,35 @@ function updateChart(data) {
     });
 }
 
-async function calculateMortgage(data) {
-    // This is a mock calculation. In a real app, this would be an API call.
+async function calculateMortgage(input_data) {
+    console.log('Sending input_data to server:', input_data);
     const response = await fetch('/calculate', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            price: data.price,
-            savings: data.savings,
-            annual_rate_percent: data.annual_rate_percent,
-            timeframe_years: data.timeframe_years,
-            is_second_hand: data.is_second_hand
+            price: input_data.price,
+            savings: input_data.savings,
+            annual_rate_percent: input_data.annual_rate_percent,
+            timeframe_years: input_data.timeframe_years,
+            location: input_data.location,
+            is_second_hand: input_data.is_second_hand
         })
     });
 
     if (response.ok) {
         const result = await response.json();
+        console.log('Received response from server:', result);
+        return result;
     } else {
-        console.error('Error calculating mortgage');
+        const errorText = await response.text();
+        console.error('Error calculating mortgage:', errorText);
+        throw new Error(errorText);
     }
 }
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
@@ -100,22 +103,31 @@ form.addEventListener('submit', (e) => {
     data.savings = parseFloat(data.savings);
     data.annual_rate_percent = parseFloat(data.annual_rate_percent);
     data.timeframe_years = parseInt(data.timeframe_years);
+    data.location = data.location;
     data.is_second_hand = data.is_second_hand === 'true';
 
-    const results = calculateMortgage(data);
-    displayResults(results);
+    try {
+        const results = await calculateMortgage(data);
+        displayResults(results);
+    } catch (error) {
+        console.error('Error displaying results:', error);
+    }
 });
 
 // Display placeholder results on page load
-window.addEventListener('load', () => {
-    const placeholderResults = calculateMortgage(placeholderData);
-    displayResults(placeholderResults);
+window.addEventListener('load', async () => {
+    try {
+        const placeholderResults = await calculateMortgage(placeholderData);
+        displayResults(placeholderResults);
 
-    // Populate form with placeholder data
-    Object.keys(placeholderData).forEach(key => {
-        const input = document.getElementById(key);
-        if (input) {
-            input.value = placeholderData[key];
-        }
-    });
+        // Populate form with placeholder data
+        Object.keys(placeholderData).forEach(key => {
+            const input = document.getElementById(key);
+            if (input) {
+                input.value = placeholderData[key];
+            }
+        });
+    } catch (error) {
+        console.error('Error displaying placeholder results:', error);
+    }
 });
