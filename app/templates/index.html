@@ -8,13 +8,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;700&family=DM+Serif+Display&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #3498db;
+            --primary-color: #1028c4;
             --secondary-color: #2ecc71;
             --background-color: #f5f7fa;
             --text-color: #2c3e50;
-            --border-color: #ddd;
+            --border-color: #424242;
+            --bulma-tabs-border-bottom-width: 20px;
         }
 
         body {
@@ -26,7 +28,8 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 1200px;
+            /* Maximum width of the overall container */
             margin: 0 auto;
             padding: 20px;
         }
@@ -34,23 +37,102 @@
         h1 {
             font-family: "DM Serif Display", serif;
             margin-bottom: 20px;
+            text-align: left;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .columns {
+            display: flex;
+            gap: 50px;
+            /* Constant gap between columns */
+            flex-wrap: wrap;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 280px;
+            /* Minimum width for each column to handle narrow screens */
+        }
+
+        .inputs {
+            flex: 0 0 30%;
+        }
+
+        .results {
+            flex: 1;
         }
 
         .input-group {
             margin-bottom: 20px;
+            width: 100%;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0;
         }
 
         label {
-            display: block;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 5px;
             font-weight: bold;
+        }
+
+        .info-icon {
+            display: inline-block;
+            margin-left: 10px;
+            position: relative;
+            cursor: pointer;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 360px;
+            background-color: #f9f9f9;
+            font-weight: normal;
+            color: #333;
+            text-align: left;
+            font-size: 14px;
+            border-radius: 4px;
+            border-color: var(--primary-color);
+            border-style: solid;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -191px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            /* Bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--primary-color) transparent transparent transparent;
+        }
+
+        .info-icon:hover .tooltip-text,
+        .info-icon:focus .tooltip-text {
+            visibility: visible;
         }
 
         input,
         select {
             font-family: inherit;
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 16px;
@@ -58,20 +140,51 @@
 
         .double-input {
             display: flex;
-            gap: 10px;
+            width: 100%;
+        }
+
+        .double-input input[type="number"]:first-child {
+            border-right: none;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
         }
 
         .double-input input {
             flex: 1;
         }
 
-        .double-input input:last-child {
-            width: 60px;
-            flex: 0 0 60px;
+        .percentage-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            border-radius: 0 4px 4px 0;
+            background-color: white;
+        }
+
+        .percentage-wrapper input {
+            padding-right: 20px;
+            border: none;
+            background-color: transparent;
+            width: 120px;
+            flex: 0 0 120px;
+        }
+
+        .percentage-wrapper span {
+            position: absolute;
+            right: 10px;
+            pointer-events: none;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         button {
-            background-color: #4285f4;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             padding: 12px 20px;
@@ -79,10 +192,11 @@
             cursor: pointer;
             font-size: 16px;
             width: 100%;
+            margin-top: 10px;
         }
 
         button:hover {
-            background-color: #3367d6;
+            background-color: #00226c;
         }
 
         #results,
@@ -95,72 +209,140 @@
 <body>
     <div class="container">
         <h1>Calculadora de Hipotecas</h1>
-        <form id="mortgage-form">
-            <div class="input-group">
-                <label for="price">Precio de la vivienda</label>
-                <input type="number" id="price" name="price" step="1000" required>
+        <div class="columns">
+            <div class="column inputs">
+                <form id="mortgage-form">
+                    <div class="input-group">
+                        <label for="price">Precio de la vivienda
+                            <span class="info-icon" tabindex="0">
+                                <i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">
+                                    Precio de la vivienda que deseas comprar, sin contar con los gastos asociados a la
+                                    compra (impuestos, notaría, registro, etc.). Sí debería incluir cualquier pago a
+                                    inmobiliarias o intermediarios.
+                                </span>
+                            </span>
+                        </label>
+                        <input type="number" id="price" name="price" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="savings">Ahorro aportado
+                            <span class="info-icon" tabindex="0">
+                                <i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">
+                                    Porción del precio de la vivienda que no se financia con la hipoteca, sino que viene
+                                    de tus ahorros.
+                                </span>
+                            </span>
+
+                        </label>
+                        <div class="double-input">
+                            <input type="number" id="savings" name="savings" required>
+                            <div class="percentage-wrapper">
+                                <input type="number" id="savings_percent" name="savings_percent" required>
+                                <span>%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" input-group">
+                        <label for="timeframe_years">Plazo en años
+                            <span class="info-icon" tabindex="0">
+                                <i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">
+                                    Número de años durante los cuales se pagará la hipoteca. Cuanto mayor sea el
+                                    plazo,
+                                    menor será la cuota mensual, pero mayor será el interés total pagado.
+                                </span>
+                            </span>
+                        </label>
+                        <input type="number" id="timeframe_years" name="timeframe_years" step="1" min="1" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="annual_rate_percent">Tipo de interés
+                            <span class="info-icon" tabindex="0">
+                                <i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">
+                                    Porcentaje de interés anual de la hipoteca. Asumimos que el interés es fijo
+                                    durante
+                                    todo el plazo, si bien existen hipotecas con interés variable, que pueden variar
+                                    a
+                                    lo largo del tiempo en función del Euribor u otros índices de referencia que
+                                    apliquen.
+                                </span>
+                            </span>
+                        </label>
+                        <input type="number" id="annual_rate_percent" name="annual_rate_percent" step="0.1" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="location">Localización
+                            <span class="info-icon" tabindex="0">
+                                <i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">
+                                    Región donde se encuentra la vivienda. Es relevante para determinar el
+                                    porcentaje de
+                                    Impuesto de Transmisiones Patrimoniales que aplica.
+                                </span>
+                            </span>
+                        </label>
+                        <select id="location" name="location" required>
+                            <option value="andalucia">Andalucía</option>
+                            <option value="aragon">Aragón</option>
+                            <option value="asturias">Asturias</option>
+                            <option value="baleares">Baleares</option>
+                            <option value="canarias">Canarias</option>
+                            <option value="cantabria">Cantabria</option>
+                            <option value="castilla_la_mancha">Castilla-La Mancha</option>
+                            <option value="castilla_y_leon">Castilla y León</option>
+                            <option value="cataluna">Cataluña</option>
+                            <option value="ceuta">Ceuta</option>
+                            <option value="extremadura">Extremadura</option>
+                            <option value="galicia">Galicia</option>
+                            <option value="madrid">Madrid</option>
+                            <option value="melilla">Melilla</option>
+                            <option value="murcia">Murcia</option>
+                            <option value="navarra">Navarra</option>
+                            <option value="pais_vasco">País Vasco</option>
+                            <option value="rioja">La Rioja</option>
+                            <option value="valencia">Comunidad Valenciana</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="is_second_hand">¿Vivienda nueva o de segunda mano?
+                            <span class="info-icon" tabindex="0">
+                                <i class="fas fa-info-circle"></i>
+                                <span class="tooltip-text">
+                                    En una vivienda de segunda mano se aplica el Impuesto de Transmisiones
+                                    Patrimoniales (ITP), dependiente de la región, mientras que en una vivienda
+                                    nueva se
+                                    aplica el Impuesto sobre el Valor Añadido (IVA), del 10%.
+                                </span>
+                            </span>
+                        </label>
+
+                        <select id="is_second_hand" name="is_second_hand">
+                            <option value="false">Nueva</option>
+                            <option value="true">Segunda mano</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">Calcular</button>
+                </form>
             </div>
 
-            <div class="input-group">
-                <label for="savings">Ahorro aportado</label>
-                <div class="double-input">
-                    <input type="number" id="savings" name="savings" step="1000" required>
-                    <input type="number" id="savings_percent" name="savings_percent" step="0.1" placeholder="%"
-                        required>
+            <div class="column results">
+
+                <div id="results">
+                    <!-- Results will be populated here -->
+                </div>
+                <div id="chart-container">
+                    <canvas id="results-chart"></canvas>
                 </div>
             </div>
-
-            <div class="input-group">
-                <label for="annual_rate_percent">Tipo de interés</label>
-                <input type="number" id="annual_rate_percent" name="annual_rate_percent" step="0.1" required>
-            </div>
-
-            <div class="input-group">
-                <label for="timeframe_years">Plazo en años:</label>
-                <input type="number" id="timeframe_years" name="timeframe_years" step="1" min="1" required>
-            </div>
-
-            <div class="input-group">
-                <label for="location">Localización</label>
-                <select id="location" name="location" required>
-                    <option value="andalucia">Andalucía</option>
-                    <option value="aragon">Aragón</option>
-                    <option value="asturias">Asturias</option>
-                    <option value="baleares">Baleares</option>
-                    <option value="canarias">Canarias</option>
-                    <option value="cantabria">Cantabria</option>
-                    <option value="castilla_la_mancha">Castilla-La Mancha</option>
-                    <option value="castilla_y_leon">Castilla y León</option>
-                    <option value="cataluna">Cataluña</option>
-                    <option value="ceuta">Ceuta</option>
-                    <option value="extremadura">Extremadura</option>
-                    <option value="galicia">Galicia</option>
-                    <option value="madrid">Madrid</option>
-                    <option value="melilla">Melilla</option>
-                    <option value="murcia">Murcia</option>
-                    <option value="navarra">Navarra</option>
-                    <option value="pais_vasco">País Vasco</option>
-                    <option value="rioja">La Rioja</option>
-                    <option value="valencia">Comunidad Valenciana</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label for="is_second_hand">¿Vivienda nueva o de segunda mano?</label>
-                <select id="is_second_hand" name="is_second_hand">
-                    <option value="false">Nueva</option>
-                    <option value="true">Segunda mano</option>
-                </select>
-            </div>
-
-            <button type="submit">Calcular</button>
-        </form>
-
-        <div id="results">
-            <!-- Results will be populated here -->
-        </div>
-        <div id="chart-container">
-            <canvas id="results-chart"></canvas>
         </div>
     </div>
 

@@ -1,10 +1,11 @@
 const placeholderData = {
     price: 200000,
     savings: 40000,
-    annual_rate_percent: 3.5,
+    savings_percent: 20,
+    annual_rate_percent: 3.7,
     timeframe_years: 30,
     location: "madrid",
-    is_second_hand: false
+    is_second_hand: true
 };
 
 const form = document.getElementById('mortgage-form');
@@ -96,6 +97,8 @@ async function calculateMortgage(input_data) {
 }
 
 form.addEventListener('submit', async (e) => {
+    console.log('Form submitted');
+
     e.preventDefault();
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
@@ -109,10 +112,12 @@ form.addEventListener('submit', async (e) => {
     try {
         const results = await calculateMortgage(data);
         displayResults(results);
+        console.log('Results:', results);
     } catch (error) {
         console.error('Error displaying results:', error);
     }
 });
+
 
 // Display placeholder results on page load
 window.addEventListener('load', async () => {
@@ -127,7 +132,71 @@ window.addEventListener('load', async () => {
                 input.value = placeholderData[key];
             }
         });
+
+        const savingsPercentInput = document.getElementById('savings_percent')
+        savingsPercentInput.value = (placeholderData.savings / placeholderData.price) * 100;
+
     } catch (error) {
         console.error('Error displaying placeholder results:', error);
     }
 });
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const priceInput = document.getElementById('price');
+    const savingsInput = document.getElementById('savings');
+    const savingsPercentInput = document.getElementById('savings_percent');
+
+    function updateSavingsFromPercent() {
+        const price = parseFloat(priceInput.value);
+        const savingsPercent = parseFloat(savingsPercentInput.value);
+        if (!isNaN(price) && !isNaN(savingsPercent)) {
+            const savings = (savingsPercent / 100) * price;
+            savingsInput.value = savings.toFixed(2);
+        }
+    }
+
+    function updatePercentFromSavings() {
+        const price = parseFloat(priceInput.value);
+        const savings = parseFloat(savingsInput.value);
+        if (!isNaN(price) && !isNaN(savings)) {
+            const savingsPercent = (savings / price) * 100;
+            savingsPercentInput.value = savingsPercent.toFixed(2);
+        }
+    }
+
+    function updateSavingsPercentFromPrice() {
+        const price = parseFloat(priceInput.value);
+        const savings = parseFloat(savingsInput.value);
+        if (!isNaN(price) && !isNaN(savings)) {
+            const savingsPercent = (savings / price) * 100;
+            savingsPercentInput.value = savingsPercent.toFixed(2);
+        }
+    }
+
+    savingsPercentInput.addEventListener('input', updateSavingsFromPercent);
+    savingsInput.addEventListener('input', updatePercentFromSavings);
+    priceInput.addEventListener('input', updateSavingsPercentFromPrice);
+});
+
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+
+    // Hide all elements with class="tab-content" by default
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Remove the class "active" from all tablinks
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it to open the default tab
+document.getElementById("defaultOpen").click();
