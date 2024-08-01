@@ -199,6 +199,67 @@
             background-color: #00226c;
         }
 
+        .tab-container {
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 0px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: inline-flex;
+            background: none;
+            border-radius: 0;
+        }
+
+        .tab {
+            display: inline-block;
+            border-radius: 0;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        .tab:hover {
+            color: var(--primary-color);
+            background-color: transparent;
+        }
+
+        .tab.active {
+            border-bottom: 4px solid var(--primary-color);
+            margin-bottom: -2px;
+            padding-bottom: 8px;
+        }
+
+        .tab-content {
+            background-color: white;
+            display: none;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-top: 2px solid var(--border-color);
+
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .tab-content p {
+            color: #666;
+            font-size: 16px;
+        }
+
         #results,
         #chart-container {
             margin-top: 30px;
@@ -335,18 +396,36 @@
             </div>
 
             <div class="column results">
+                <div class="tab-container">
+                    <div class="tabs">
+                        <button class="tab active" data-tab="payment">Pagos</button>
+                        <button class="tab" data-tab="amortization">Amortización</button>
+                        <button class="tab" data-tab="analysis">Análisis</button>
+                    </div>
+                    <div id="payment" class="tab-content active">
+                        <h2>Payment Breakdown</h2>
+                        <p>This is the content for the Payment breakdown tab.</p>
+                    </div>
+                    <div id="amortization" class="tab-content">
+                        <h2>Amortization</h2>
+                        <p>This is the content for the Amortization tab.</p>
+                    </div>
+                    <div id="analysis" class="tab-content">
+                        <h2>Analysis</h2>
+                        <p>This is the content for the Analysis tab.</p>
+                    </div>
 
-                <div id="results">
-                    <!-- Results will be populated here -->
-                </div>
-                <div id="chart-container">
-                    <canvas id="results-chart"></canvas>
+                    <div id="results">
+                        <!-- Results will be populated here -->
+                    </div>
+                    <div id="chart-container">
+                        <canvas id="results-chart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="../static/script.js"></script>
+        <script src="../static/script.js"></script>
 </body>
 
 </html>
