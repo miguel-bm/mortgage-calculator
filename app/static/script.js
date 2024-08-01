@@ -145,6 +145,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const priceInput = document.getElementById('price');
     const savingsInput = document.getElementById('savings');
     const savingsPercentInput = document.getElementById('savings_percent');
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
 
     function updateSavingsFromPercent() {
         const price = parseFloat(priceInput.value);
@@ -173,30 +175,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     }
 
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+
+            tab.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
     savingsPercentInput.addEventListener('input', updateSavingsFromPercent);
     savingsInput.addEventListener('input', updatePercentFromSavings);
     priceInput.addEventListener('input', updateSavingsPercentFromPrice);
 });
-
-function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
-
-    // Hide all elements with class="tab-content" by default
-    tabcontent = document.getElementsByClassName("tab-content");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-
-    // Remove the class "active" from all tablinks
-    tablinks = document.getElementsByClassName("tab-button");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-
-// Get the element with id="defaultOpen" and click on it to open the default tab
-document.getElementById("defaultOpen").click();
