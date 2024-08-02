@@ -128,12 +128,20 @@ window.addEventListener('load', async () => {
         Object.keys(placeholderData).forEach(key => {
             const input = document.getElementById(key);
             if (input) {
-                input.value = placeholderData[key];
+                if (key === 'price' || key === 'savings') {
+                    input.value = new Intl.NumberFormat('es-ES').format(placeholderData[key]);
+                } else {
+                    input.value = placeholderData[key];
+                }
             }
         });
 
         const savingsPercentInput = document.getElementById('savings_percent')
-        savingsPercentInput.value = (placeholderData.savings / placeholderData.price) * 100;
+        savingsPercentInput.value = ((placeholderData.savings / placeholderData.price) * 100).toFixed(2);
+
+        // Apply formatting to price and savings inputs
+        updateMoneyQuantityFormat(document.getElementById('price'));
+        updateMoneyQuantityFormat(document.getElementById('savings'));
 
     } catch (error) {
         console.error('Error displaying placeholder results:', error);
