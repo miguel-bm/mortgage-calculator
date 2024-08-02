@@ -118,7 +118,6 @@ form.addEventListener('submit', async (e) => {
     }
 });
 
-
 // Display placeholder results on page load
 window.addEventListener('load', async () => {
     try {
@@ -149,7 +148,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const contents = document.querySelectorAll('.tab-content');
 
     function updateSavingsFromPercent() {
-        const price = parseFloat(priceInput.value);
+        const price = parseFloat(priceInput.value.replace(/\D/g, ''));
         const savingsPercent = parseFloat(savingsPercentInput.value);
         if (!isNaN(price) && !isNaN(savingsPercent)) {
             const savings = (savingsPercent / 100) * price;
@@ -158,8 +157,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
     function updatePercentFromSavings() {
-        const price = parseFloat(priceInput.value);
-        const savings = parseFloat(savingsInput.value);
+        const price = parseFloat(priceInput.value.replace(/\D/g, ''));
+        const savings = parseFloat(savingsInput.value.replace(/\D/g, ''));
         if (!isNaN(price) && !isNaN(savings)) {
             const savingsPercent = (savings / price) * 100;
             savingsPercentInput.value = savingsPercent.toFixed(2);
@@ -167,14 +166,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
     function updateSavingsPercentFromPrice() {
-        const price = parseFloat(priceInput.value);
-        const savings = parseFloat(savingsInput.value);
+        const price = parseFloat(priceInput.value.replace(/\D/g, ''));
+        const savings = parseFloat(savingsInput.value.replace(/\D/g, ''));
         if (!isNaN(price) && !isNaN(savings)) {
             const savingsPercent = (savings / price) * 100;
             savingsPercentInput.value = savingsPercent.toFixed(2);
         }
     }
-
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -191,4 +189,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
     savingsPercentInput.addEventListener('input', updateSavingsFromPercent);
     savingsInput.addEventListener('input', updatePercentFromSavings);
     priceInput.addEventListener('input', updateSavingsPercentFromPrice);
+
+    // Add event listener for formatting
+    priceInput.addEventListener('input', function (e) {
+        updateMoneyQuantityFormat(this);
+    });
+    savingsInput.addEventListener('input', function (e) {
+        updateMoneyQuantityFormat(this);
+    });
 });
+
+function updateMoneyQuantityFormat(inputElement) {
+    const cursorPosition = inputElement.selectionStart;
+    const oldLength = inputElement.value.length;
+    let value = inputElement.value.replace(/\D/g, '');
+
+    if (value) {
+        value = parseInt(value, 10).toString();
+        const formattedValue = new Intl.NumberFormat('es-ES').format(value);
+        inputElement.value = formattedValue;
+
+        // Calculate new cursor position
+        const newLength = inputElement.value.length;
+        const newPosition = cursorPosition - (oldLength - newLength);
+
+        // Set the cursor back to the calculated position
+        inputElement.setSelectionRange(newPosition, newPosition);
+    }
+}
