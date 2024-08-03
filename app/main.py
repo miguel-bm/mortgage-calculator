@@ -9,8 +9,8 @@ from pydantic import BaseModel
 app = FastAPI()
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 app.mount(
-    "/static",
-    StaticFiles(directory=str(Path(__file__).parent / "static")),
+    path="/static",
+    app=StaticFiles(directory=str(Path(__file__).parent / "static")),
     name="static",
 )
 

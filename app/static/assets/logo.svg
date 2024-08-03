@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   sodipodi:docname="logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.3578759"
+     inkscape:cx="424.56016"
+     inkscape:cy="285.00396"
+     inkscape:window-width="2560"
+     inkscape:window-height="1387"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:28.2223px;font-family:Palatino;-inkscape-font-specification:Palatino;text-align:end;letter-spacing:0.529167px;word-spacing:2.64583px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:#070400;stroke-width:10;stroke-linecap:round;stroke-dasharray:none"
+       x="112.59573"
+       y="70.908745"
+       id="text4"><tspan
+         sodipodi:role="line"
+         id="tspan4"
+         style="stroke-width:10"
+         x="112.59573"
+         y="70.908745" /></text>
+    <g
+       id="g1"
+       transform="translate(1.0583333,2.1166667)">
+      <g
+         id="g6"
+         style="fill:#1028c4;fill-opacity:1;stroke:#1028c4;stroke-opacity:1">
+        <rect
+           style="fill:#1028c4;fill-opacity:1;stroke:#1028c4;stroke-width:10.1567;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+           id="rect3-0"
+           width="55.836334"
+           height="23.641485"
+           x="21.217934"
+           y="64.874184"
+           ry="10.548649" />
+        <rect
+           style="fill:#1028c4;fill-opacity:1;stroke:#1028c4;stroke-width:8.81463;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+           id="rect3"
+           width="57.178402"
+           height="17.388527"
+           x="20.523338"
+           y="56.300678" />
+        <rect
+           style="fill:#1028c4;fill-opacity:1;stroke:#1028c4;stroke-width:7.09969;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+           id="rect2"
+           width="39.521946"
+           height="39.521946"
+           x="51.65118"
+           y="-17.761976"
+           transform="rotate(45)" />
+      </g>
+      <g
+         id="g5"
+         style="fill:#1028c4;fill-opacity:1;stroke:#1028c4;stroke-opacity:1">
+        <path
+           style="fill:#1028c4;fill-opacity:1;stroke:#1028c4;stroke-width:10;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+           d="M 5,48.916683 48.916687,5"
+           id="path1"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:#1028c4;fill-opacity:1;stroke:#1028c4;stroke-width:10;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+           d="M 49.248342,5 93.165026,48.916686"
+           id="path1-6"
+           sodipodi:nodetypes="cc" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:64.3282px;font-family:Palatino;-inkscape-font-specification:Palatino;text-align:end;letter-spacing:1.20615px;word-spacing:6.03073px;text-anchor:end;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+         x="64.158844"
+         y="84.828773"
+         id="text5"
+         transform="scale(1.0177061,0.98260195)"><tspan
+           sodipodi:role="line"
+           id="tspan5"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+           x="65.36499"
+           y="84.828773">€</tspan></text>
+    </g>
+  </g>
+</svg>

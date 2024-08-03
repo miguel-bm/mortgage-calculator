@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Hipotecas</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="../static/assets/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -419,6 +420,12 @@
             color: #333;
         }
 
+        .monthly-payment-amount .decimals {
+            font-size: 30px;
+            font-weight: 400;
+            color: #333;
+        }
+
         .monthly-payment-amount .currency {
             font-size: 30px;
             color: #767676;
@@ -592,7 +599,8 @@
                                 </span>
                             </div>
                             <div class="monthly-payment-amount">
-                                <span class="amount" id="monthly-payment-amount">1.563,34</span>
+                                <span class="amount" id="monthly-payment-amount">1.563</span>
+                                <span class="decimals" id="monthly-payment-decimals">,34</span>
                                 <span class="currency">€</span>
                             </div>
                         </div>
