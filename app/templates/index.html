@@ -383,6 +383,47 @@
         .radio-group input[type="radio"]:checked+label {
             color: var(--primary-color);
         }
+
+        .monthly-payment-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0px;
+            background-color: transparent;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .monthly-payment-label {
+            font-weight: bold;
+            margin-bottom: 0px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .monthly-payment-label .info-icon {
+            margin-left: 15px;
+        }
+
+        .monthly-payment-amount {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+        }
+
+        .monthly-payment-amount .amount {
+            font-size: 40px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .monthly-payment-amount .currency {
+            font-size: 30px;
+            color: #767676;
+            margin-left: 7px;
+        }
     </style>
 </head>
 
@@ -539,16 +580,30 @@
                         <button class="tab" data-tab="analysis">Análisis</button>
                     </div>
                     <div id="payment" class="tab-content active">
-                        <h2>Payment Breakdown</h2>
-                        <p>This is the content for the Payment breakdown tab.</p>
+                        <div class="monthly-payment-container">
+                            <div class="monthly-payment-label">
+                                Cuota mensual
+                                <span class="info-icon" tabindex="0">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span class="tooltip-text">
+                                        Esta es la cantidad que pagarás cada mes por tu hipoteca, incluyendo capital e
+                                        intereses.
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="monthly-payment-amount">
+                                <span class="amount" id="monthly-payment-amount">1.563,34</span>
+                                <span class="currency">€</span>
+                            </div>
+                        </div>
                     </div>
                     <div id="amortization" class="tab-content">
-                        <h2>Amortization</h2>
-                        <p>This is the content for the Amortization tab.</p>
+                        <h2>Plan de Amortización</h2>
+                        <p>Visualiza cómo se reducirá tu deuda a lo largo del tiempo.</p>
                     </div>
                     <div id="analysis" class="tab-content">
-                        <h2>Analysis</h2>
-                        <p>This is the content for the Analysis tab.</p>
+                        <h2>Análisis Financiero</h2>
+                        <p>Explora un análisis detallado de tu hipoteca y sus implicaciones.</p>
                     </div>
 
                     <div id="results">

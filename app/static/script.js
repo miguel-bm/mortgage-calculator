@@ -13,6 +13,25 @@ const resultsContainer = document.getElementById('results');
 let resultsChart;
 
 function displayResults(data) {
+
+    // Update the monthly payment amount in the UI
+    const monthlyPaymentElement = document.getElementById('monthly-payment-amount');
+    if (monthlyPaymentElement) {
+        // Format the monthly payment as a currency string
+        let formattedPayment = new Intl.NumberFormat('es-ES', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(data.monthly_payment);
+
+        // if len is 7, add an extra dot (1234,56 -> 1.234,56)
+        if (formattedPayment.length === 7) {
+            formattedPayment = formattedPayment.slice(0, 1) + '.' + formattedPayment.slice(1);
+        }
+
+        // Update the content of the element
+        monthlyPaymentElement.textContent = formattedPayment;
+    }
+
     resultsContainer.innerHTML = `
         <div class="result-item"><span class="result-label">Cuota mensual:</span> ${data.monthly_payment.toFixed(2)}€</div>
         <div class="result-item"><span class="result-label">Importe de la hipoteca:</span> ${data.mortgage_amount.toFixed(2)}€</div>
