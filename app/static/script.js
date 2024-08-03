@@ -12,48 +12,45 @@ const form = document.getElementById('mortgage-form');
 const resultsContainer = document.getElementById('results');
 let resultsChart;
 
-function displayResults(data) {
-
+function displayResults(data, initialData) {
     // Update the monthly payment amount in the UI
     const monthlyPaymentElement = document.getElementById('monthly-payment-amount');
     const monthlyPaymentDecimalsElement = document.getElementById('monthly-payment-decimals');
     if (monthlyPaymentElement) {
-        // Format the monthly payment as a currency string
         let formattedPayment = new Intl.NumberFormat('es-ES', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         }).format(data.monthly_payment);
 
-        // if len is 7, add an extra dot (1234,56 -> 1.234,56)
         if (formattedPayment.length === 7) {
             formattedPayment = formattedPayment.slice(0, 1) + '.' + formattedPayment.slice(1);
         }
 
-        // get the whole part
-        const wholePart = formattedPayment.split(',')[0];
-        const decimalsPart = ',' + formattedPayment.split(',')[1];
-
-        // Update the content of the element
+        const [wholePart, decimalsPart] = formattedPayment.split(',');
         monthlyPaymentElement.textContent = wholePart;
-        monthlyPaymentDecimalsElement.textContent = decimalsPart;
-
+        monthlyPaymentDecimalsElement.textContent = ',' + decimalsPart;
     }
 
-    resultsContainer.innerHTML = `
-        <div class="result-item"><span class="result-label">Cuota mensual:</span> ${data.monthly_payment.toFixed(2)}€</div>
-        <div class="result-item"><span class="result-label">Importe de la hipoteca:</span> ${data.mortgage_amount.toFixed(2)}€</div>
-        <div class="result-item"><span class="result-label">Intereses totales:</span> ${data.mortgage_interest.toFixed(2)}€</div>
-        <div class="result-item"><span class="result-label">Porcentaje de financiación:</span> ${data.financing_percent.toFixed(2)}%</div>
-        <div class="result-item"><span class="result-label">Gastos de impuestos:</span> ${data.tax_expenses.toFixed(2)}€</div>
-        <div class="result-item"><span class="result-label">Gastos de notaría:</span> ${data.notary_expenses.toFixed(2)}€</div>
-        <div class="result-item"><span class="result-label">Gastos de registro:</span> ${data.registry_expenses.toFixed(2)}€</div>
-        <div class="result-item"><span class="result-label">Gastos administrativos:</span> ${data.administrative_expenses.toFixed(2)}€</div>
-        <div class="result-item"><span class="result-label">Gastos de tasación:</span> ${data.appraisal_expenses.toFixed(2)}€</div>
-        <div class="result-item"><span class="result-label">Total de gastos:</span> ${data.total_expenses.toFixed(2)}€</div>
-        <div class="result-item"><span class="result-label">Coste total:</span> ${data.total_cost.toFixed(2)}€</div>
-    `;
+    // Update the comparison graph values
+    const formatCurrency = (value) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value);
 
-    updateChart(data);
+    document.getElementById('interest-value').textContent = formatCurrency(data.mortgage_interest);
+    document.getElementById('mortgage-value').textContent = formatCurrency(data.mortgage_amount);
+    document.getElementById('savings-value').textContent = formatCurrency(initialData.savings);
+    document.getElementById('left-total-value').textContent = formatCurrency(data.total_cost);
+    document.getElementById('expenses-value').textContent = formatCurrency(data.total_expenses);
+    document.getElementById('price-value').textContent = formatCurrency(initialData.price);
+    document.getElementById('right-total-value').textContent = formatCurrency(initialData.price + data.total_expenses);
+
+    // Update the graph bars
+    const totalLeft = data.mortgage_interest + data.mortgage_amount + initialData.savings;
+    document.querySelector('.left-graph .interest-bar').style.height = `${(data.mortgage_interest / totalLeft) * 100}%`;
+    document.querySelector('.left-graph .mortgage-bar').style.height = `${(data.mortgage_amount / totalLeft) * 100}%`;
+    document.querySelector('.left-graph .savings-bar').style.height = `${(initialData.savings / totalLeft) * 100}%`;
+
+    const totalRight = initialData.price + data.total_expenses;
+    document.querySelector('.right-graph .price-bar').style.height = `${(initialData.price / totalLeft) * 100}%`;
+    document.querySelector('.right-graph .expenses-bar').style.height = `${(data.total_expenses / totalLeft) * 100}%`;
 }
 
 function updateChart(data) {
@@ -183,7 +180,7 @@ window.addEventListener('load', async () => {
 
         // Calculate and display results
         const results = await calculateMortgage(initialData);
-        displayResults(results);
+        displayResults(results, initialData);
 
         // Apply formatting to inputs
         updateMoneyQuantityFormat(document.getElementById('price'));

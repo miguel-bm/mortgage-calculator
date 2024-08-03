@@ -115,9 +115,17 @@
             font-size: 16px;
         }
 
+        .table-info-icon {
+            font-size: 12px;
+            margin-right: 0px;
+            margin-left: 5px;
+        }
+
+
         .tooltip-text {
             visibility: hidden;
-            width: 360px;
+            max-width: 360px;
+            width: max-content;
             background-color: #f9f9f9;
             font-weight: normal;
             color: #333;
@@ -135,6 +143,7 @@
             z-index: 1;
             transform: translate(-50%, 0px);
             box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+            white-space: normal;
         }
 
         .tooltip-text::after {
@@ -741,10 +750,11 @@
                                         <td>
                                             <span class="color-square interest-color"></span>
                                             Intereses
-                                            <span class="info-icon" tabindex="0">
+                                            <span class="info-icon table-info-icon" tabindex="0">
                                                 <i class="fas fa-info-circle"></i>
                                                 <span class="tooltip-text">Total de intereses pagados durante la vida
-                                                    del préstamo</span>
+                                                    de la hipoteca. Es el extra que le tienes que pagar de vuelta al
+                                                    banco por haberte dado un préstamo.</span>
                                             </span>
                                         </td>
                                         <td id="interest-value">50.000 €</td>
@@ -753,9 +763,10 @@
                                         <td>
                                             <span class="color-square mortgage-color"></span>
                                             Hipoteca
-                                            <span class="info-icon" tabindex="0">
+                                            <span class="info-icon table-info-icon" tabindex="0">
                                                 <i class="fas fa-info-circle"></i>
-                                                <span class="tooltip-text">Cantidad financiada por el banco</span>
+                                                <span class="tooltip-text">Cantidad total financiada. Es la cantidad que
+                                                    te presta el bando para pagar la vivienda.</span>
                                             </span>
                                         </td>
                                         <td id="mortgage-value">150.000 €</td>
@@ -764,9 +775,11 @@
                                         <td>
                                             <span class="color-square savings-color"></span>
                                             Ahorros
-                                            <span class="info-icon" tabindex="0">
+                                            <span class="info-icon table-info-icon" tabindex="0">
                                                 <i class="fas fa-info-circle"></i>
-                                                <span class="tooltip-text">Cantidad aportada de tus ahorros</span>
+                                                <span class="tooltip-text">Cantidad aportada de tus ahorros para pagar
+                                                    el coste de la vivienda, y que por tanto no te tiene que prestar el
+                                                    banco.</span>
                                             </span>
                                         </td>
                                         <td id="savings-value">50.000 €</td>
@@ -776,10 +789,12 @@
                                 <div class="comparison-total">
                                     <span>
                                         Total de la hipoteca
-                                        <span class="info-icon" tabindex="0">
+                                        <span class="info-icon table-info-icon" tabindex="0">
                                             <i class="fas fa-info-circle"></i>
-                                            <span class="tooltip-text">Coste total de la vivienda incluyendo
-                                                intereses</span>
+                                            <span class="tooltip-text">Cantidad total que tienes que pagar para la
+                                                compra de la vivienda, incluyendo la aportación de tus ahorros al
+                                                inicio, y la devolución a lo largo del tiempo de la cantidad prestada y
+                                                los intereses.</span>
                                         </span>
                                     </span>
                                     <span id="left-total-value">250.000 €</span>
@@ -802,10 +817,10 @@
                                         <td>
                                             <span class="color-square expenses-color"></span>
                                             Gastos
-                                            <span class="info-icon" tabindex="0">
+                                            <span class="info-icon table-info-icon" tabindex="0">
                                                 <i class="fas fa-info-circle"></i>
-                                                <span class="tooltip-text">Gastos asociados a la compra (impuestos,
-                                                    notaría, registro, etc.)</span>
+                                                <span class="tooltip-text">Gastos asociados a la compra, incluyendo
+                                                    impuestos, notaría, registro, y tasación.</span>
                                             </span>
                                         </td>
                                         <td id="expenses-value">20.000 €</td>
@@ -814,9 +829,10 @@
                                         <td>
                                             <span class="color-square price-color"></span>
                                             Precio
-                                            <span class="info-icon" tabindex="0">
+                                            <span class="info-icon table-info-icon" tabindex="0">
                                                 <i class="fas fa-info-circle"></i>
-                                                <span class="tooltip-text">Precio de compra de la vivienda</span>
+                                                <span class="tooltip-text">Precio base de la vivienda, lo que se
+                                                    lleva el vendedor.</span>
                                             </span>
                                         </td>
                                         <td id="price-value">200.000 €</td>
@@ -826,10 +842,10 @@
                                 <div class="comparison-total">
                                     <span>
                                         Total de la vivienda
-                                        <span class="info-icon" tabindex="0">
+                                        <span class="info-icon table-info-icon" tabindex="0">
                                             <i class="fas fa-info-circle"></i>
                                             <span class="tooltip-text">Coste total de la vivienda incluyendo
-                                                gastos</span>
+                                                gastos.</span>
                                         </span>
                                     </span>
                                     <span id="right-total-value">220.000 €</span>
