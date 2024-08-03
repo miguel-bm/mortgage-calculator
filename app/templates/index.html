@@ -431,6 +431,13 @@
             color: #767676;
             margin-left: 7px;
         }
+
+        .separator {
+            width: 75%;
+            margin: 20px auto;
+            border: 0;
+            border-top: 1px solid #ccc;
+        }
     </style>
 </head>
 
@@ -526,7 +533,7 @@
                         </label>
                         <select id="location" name="location" required>
                             <option value="andalucia">Andalucía</option>
-                            <option value="aragon">Aragón</option>
+                            <option value="aragon">Arag��n</option>
                             <option value="asturias">Asturias</option>
                             <option value="baleares">Baleares</option>
                             <option value="canarias">Canarias</option>
@@ -604,6 +611,8 @@
                                 <span class="currency">€</span>
                             </div>
                         </div>
+                        <hr class="separator">
+                        <div id="comparison-graph-container"></div>
                     </div>
                     <div id="amortization" class="tab-content">
                         <h2>Plan de Amortización</h2>
