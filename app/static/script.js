@@ -32,7 +32,7 @@ function displayResults(data) {
     }
 
     // Update the comparison graph values
-    const formatCurrency = (value) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value);
+    const formatCurrency = (value) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
 
     document.getElementById('interest-value').textContent = formatCurrency(data.mortgage_interest);
     document.getElementById('mortgage-value').textContent = formatCurrency(data.mortgage_amount);
