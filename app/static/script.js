@@ -42,15 +42,28 @@ function displayResults(data, initialData) {
     document.getElementById('price-value').textContent = formatCurrency(initialData.price);
     document.getElementById('right-total-value').textContent = formatCurrency(initialData.price + data.total_expenses);
 
+
+    // Helper function to set bar height with a minimum value
+    const setBarHeight = (selector, value, total) => {
+        const bar = document.querySelector(selector);
+        // Remove existing height style
+        bar.style.removeProperty('height');
+        // Force reflow
+        void bar.offsetHeight;
+        const percentage = Math.max((value / total) * 100, 0.5); // Ensure a minimum height of 0.5%
+        bar.style.height = `${percentage}%`;
+        // Set !important to override inline styles
+        bar.style.setProperty('height', `${percentage}%`, 'important');
+    };
+
     // Update the graph bars
     const totalLeft = data.mortgage_interest + data.mortgage_amount + initialData.savings;
-    document.querySelector('.left-graph .interest-bar').style.height = `${(data.mortgage_interest / totalLeft) * 100}%`;
-    document.querySelector('.left-graph .mortgage-bar').style.height = `${(data.mortgage_amount / totalLeft) * 100}%`;
-    document.querySelector('.left-graph .savings-bar').style.height = `${(initialData.savings / totalLeft) * 100}%`;
-
-    const totalRight = initialData.price + data.total_expenses;
-    document.querySelector('.right-graph .price-bar').style.height = `${(initialData.price / totalLeft) * 100}%`;
-    document.querySelector('.right-graph .expenses-bar').style.height = `${(data.total_expenses / totalLeft) * 100}%`;
+    setBarHeight('.left-graph .interest-bar', data.mortgage_interest, totalLeft);
+    setBarHeight('.left-graph .mortgage-bar', data.mortgage_amount, totalLeft);
+    setBarHeight('.left-graph .savings-bar', initialData.savings, totalLeft);
+    setBarHeight('.right-graph .price-bar', initialData.price, totalLeft);
+    setBarHeight('.right-graph .expenses-bar', data.total_expenses, totalLeft);
+    document.body.offsetHeight;
 }
 
 function updateChart(data) {
