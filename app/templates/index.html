@@ -446,13 +446,17 @@
             display: flex;
             justify-content: space-between;
             width: 100%;
-            max-width: 500px;
+            max-width: 800px;
             margin: 0 auto;
+            padding: 20px 0;
         }
 
         .comparison-left,
         .comparison-right {
-            width: 20%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
 
         .comparison-center {
@@ -462,55 +466,81 @@
         }
 
         .comparison-table {
-            width: 100%;
             border-collapse: collapse;
+            width: 100%;
         }
 
         .comparison-table td {
             padding: 5px;
             text-align: left;
+            white-space: nowrap;
+        }
+
+        .comparison-table td:last-child {
+            text-align: right;
+        }
+
+        .comparison-separator {
+            width: 100%;
+            border: none;
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
         }
 
         .comparison-total {
-            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-weight: bold;
         }
 
         .vertical-graph {
-            height: 100%;
+            height: 200px;
+            width: 30px;
             display: flex;
-            flex-direction: column;
-            align-items: end;
-            justify-content: end;
+            flex-direction: column-reverse;
         }
 
         .graph-bar {
-            width: 25px;
+            width: 100%;
         }
 
-        .savings-bar {
+        .left-graph .savings-bar {
+            height: 20%;
             background-color: var(--savings-color);
-            height: 20%;
         }
 
-        .mortgage-bar {
+        .left-graph .mortgage-bar {
+            height: 50%;
             background-color: var(--mortgage-color);
-            height: 600%;
         }
 
-        .interest-bar {
+        .left-graph .interest-bar {
+            height: 30%;
             background-color: var(--interest-color);
-            height: 20%;
         }
 
-        .price-bar {
-            background-color: #3498db;
-            height: 60%;
+        .right-graph .price-bar {
+            height: 80%;
+            background-color: #2ecc71;
         }
 
-        .expenses-bar {
-            background-color: #f1c40f;
+        .right-graph .expenses-bar {
             height: 20%;
+            background-color: #e74c3c;
+        }
+
+        .info-icon {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .tooltip-text {
+            left: 100%;
+            right: auto;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -690,39 +720,44 @@
                             <div class="comparison-left">
                                 <table class="comparison-table">
                                     <tr>
-                                        <td>Ahorros</td>
+                                        <td>Ahorros
+                                            <span class="info-icon" tabindex="0">
+                                                <i class="fas fa-info-circle"></i>
+                                                <span class="tooltip-text">Cantidad aportada de tus ahorros</span>
+                                            </span>
+                                        </td>
                                         <td id="savings-value">50.000 €</td>
-                                        <td class="info-icon" tabindex="0">
-                                            <i class="fas fa-info-circle"></i>
-                                            <span class="tooltip-text">Cantidad aportada de tus ahorros</span>
-                                        </td>
                                     </tr>
                                     <tr>
-                                        <td>Hipoteca</td>
+                                        <td>Hipoteca
+                                            <span class="info-icon" tabindex="0">
+                                                <i class="fas fa-info-circle"></i>
+                                                <span class="tooltip-text">Cantidad financiada por el banco</span>
+                                            </span>
+                                        </td>
                                         <td id="mortgage-value">150.000 €</td>
-                                        <td class="info-icon" tabindex="0">
-                                            <i class="fas fa-info-circle"></i>
-                                            <span class="tooltip-text">Cantidad financiada por el banco</span>
-                                        </td>
                                     </tr>
                                     <tr>
-                                        <td>Intereses</td>
-                                        <td id="interest-value">50.000 €</td>
-                                        <td class="info-icon" tabindex="0">
-                                            <i class="fas fa-info-circle"></i>
-                                            <span class="tooltip-text">Total de intereses pagados durante la vida del
-                                                préstamo</span>
+                                        <td>Intereses
+                                            <span class="info-icon" tabindex="0">
+                                                <i class="fas fa-info-circle"></i>
+                                                <span class="tooltip-text">Total de intereses pagados durante la vida
+                                                    del préstamo</span>
+                                            </span>
                                         </td>
+                                        <td id="interest-value">50.000 €</td>
                                     </tr>
                                 </table>
+                                <hr class="comparison-separator">
                                 <div class="comparison-total">
-                                    <span>Total</span>
-                                    <span id="left-total-value">250.000 €</span>
-                                    <span class="info-icon" tabindex="0">
-                                        <i class="fas fa-info-circle"></i>
-                                        <span class="tooltip-text">Coste total de la vivienda incluyendo
-                                            intereses</span>
+                                    <span>Total
+                                        <span class="info-icon" tabindex="0">
+                                            <i class="fas fa-info-circle"></i>
+                                            <span class="tooltip-text">Coste total de la vivienda incluyendo
+                                                intereses</span>
+                                        </span>
                                     </span>
+                                    <span id="left-total-value">250.000 €</span>
                                 </div>
                             </div>
                             <div class="comparison-center">
@@ -739,30 +774,35 @@
                             <div class="comparison-right">
                                 <table class="comparison-table">
                                     <tr>
-                                        <td>Precio</td>
-                                        <td id="price-value">200.000 €</td>
-                                        <td class="info-icon" tabindex="0">
-                                            <i class="fas fa-info-circle"></i>
-                                            <span class="tooltip-text">Precio de compra de la vivienda</span>
+                                        <td>Precio
+                                            <span class="info-icon" tabindex="0">
+                                                <i class="fas fa-info-circle"></i>
+                                                <span class="tooltip-text">Precio de compra de la vivienda</span>
+                                            </span>
                                         </td>
+                                        <td id="price-value">200.000 €</td>
                                     </tr>
                                     <tr>
-                                        <td>Gastos</td>
-                                        <td id="expenses-value">20.000 €</td>
-                                        <td class="info-icon" tabindex="0">
-                                            <i class="fas fa-info-circle"></i>
-                                            <span class="tooltip-text">Gastos asociados a la compra (impuestos, notaría,
-                                                registro, etc.)</span>
+                                        <td>Gastos
+                                            <span class="info-icon" tabindex="0">
+                                                <i class="fas fa-info-circle"></i>
+                                                <span class="tooltip-text">Gastos asociados a la compra (impuestos,
+                                                    notaría, registro, etc.)</span>
+                                            </span>
                                         </td>
+                                        <td id="expenses-value">20.000 €</td>
                                     </tr>
                                 </table>
+                                <hr class="comparison-separator">
                                 <div class="comparison-total">
-                                    <span>Total</span>
-                                    <span id="right-total-value">220.000 €</span>
-                                    <span class="info-icon" tabindex="0">
-                                        <i class="fas fa-info-circle"></i>
-                                        <span class="tooltip-text">Coste total de la vivienda incluyendo gastos</span>
+                                    <span>Total
+                                        <span class="info-icon" tabindex="0">
+                                            <i class="fas fa-info-circle"></i>
+                                            <span class="tooltip-text">Coste total de la vivienda incluyendo
+                                                gastos</span>
+                                        </span>
                                     </span>
+                                    <span id="right-total-value">220.000 €</span>
                                 </div>
                             </div>
                         </div>
