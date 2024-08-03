@@ -49,22 +49,36 @@
         .columns {
             display: flex;
             gap: 50px;
-            /* Constant gap between columns */
             flex-wrap: wrap;
         }
 
         .column {
-            flex: 1;
+            flex: 1 1 280px;
             min-width: 280px;
-            /* Minimum width for each column to handle narrow screens */
         }
 
         .inputs {
-            flex: 0 0 30%;
+            flex: 1 1 25%;
+            max-width: 480px;
         }
 
         .results {
-            flex: 1;
+            flex: 1 1 65%;
+        }
+
+        @media (max-width: 768px) {
+            .columns {
+                flex-direction: column;
+            }
+
+            .column {
+                width: 100%;
+            }
+
+            .inputs,
+            .results {
+                flex: 1 1 100%;
+            }
         }
 
         .input-group {
@@ -83,12 +97,13 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 5px;
+            margin-left: 5px;
             font-weight: bold;
         }
 
         .info-icon {
             display: inline-block;
-            margin-left: 10px;
+            margin-right: 5px;
             position: relative;
             cursor: pointer;
             color: var(--primary-color);
@@ -145,11 +160,66 @@
         input,
         select {
             font-family: inherit;
+            height: 45px;
             width: 100%;
             padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 16px;
+            text-align: center;
+        }
+
+        input:focus,
+        select:focus {
+            background-color: #f0f0f0;
+            outline: none;
+        }
+
+        .money-input {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .money-input input {
+            padding-right: calc(50% - 20px);
+            text-align: right;
+
+        }
+
+        .money-input .unit {
+            font-family: inherit;
+            position: absolute;
+            right: calc(50% - 35px);
+            text-align: left;
+            top: 50%;
+            transform: translateY(-51%);
+            color: black;
+            pointer-events: none;
+        }
+
+
+        .percent-input {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .percent-input input {
+            padding-right: calc(50% - 10px);
+            text-align: right;
+
+        }
+
+        .percent-input .unit {
+            font-family: inherit;
+            position: absolute;
+            right: calc(50% - 25px);
+            text-align: left;
+            top: 50%;
+            transform: translateY(-51%);
+            color: black;
+            pointer-events: none;
         }
 
         .double-input {
@@ -157,44 +227,26 @@
             width: 100%;
         }
 
-        .double-input input[type="text"]:first-child {
+        .double-input> :first-child {
+            width: 60%;
+        }
+
+        .double-input> :last-child {
+            width: 40%;
+        }
+
+
+        .double-input> :first-child input {
             border-right: none;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
+
         }
 
-        .double-input input {
-            flex: 1;
-        }
+        .double-input> :last-child input {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
 
-        .percentage-wrapper {
-            display: flex;
-            align-items: center;
-            position: relative;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            border-radius: 0 4px 4px 0;
-            background-color: white;
-        }
-
-        .percentage-wrapper input {
-            padding-right: 20px;
-            border: none;
-            background-color: transparent;
-            width: 120px;
-            flex: 0 0 120px;
-        }
-
-        .percentage-wrapper span {
-            position: absolute;
-            right: 10px;
-            pointer-events: none;
-        }
-
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
         }
 
         button {
@@ -351,9 +403,11 @@
                                 </span>
                             </span>
                         </label>
-                        <input type="text" id="price" name="price" required>
+                        <div class="money-input">
+                            <input type="text" id="price" name="price" required>
+                            <span class="unit">€</span>
+                        </div>
                     </div>
-
                     <div class="input-group">
                         <label for="savings">Ahorro aportado
                             <span class="info-icon" tabindex="0">
@@ -366,10 +420,13 @@
 
                         </label>
                         <div class="double-input">
-                            <input type="text" id="savings" name="savings" required>
-                            <div class="percentage-wrapper">
+                            <div class="money-input">
+                                <input type="text" id="savings" name="savings" required>
+                                <span class="unit">€</span>
+                            </div>
+                            <div class="percent-input">
                                 <input type="text" id="savings_percent" name="savings_percent" required>
-                                <span>%</span>
+                                <span class="unit">%</span>
                             </div>
                         </div>
                     </div>
@@ -402,7 +459,10 @@
                                 </span>
                             </span>
                         </label>
-                        <input type="text" id="annual_rate_percent" name="annual_rate_percent" required>
+                        <div class="percent-input">
+                            <input type="text" id="annual_rate_percent" name="annual_rate_percent" required>
+                            <span class="unit">%</span>
+                        </div>
                     </div>
 
                     <div class="input-group">

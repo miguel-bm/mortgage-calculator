@@ -1,9 +1,9 @@
 const placeholderData = {
-    price: 200000,
-    savings: 40000,
-    savings_percent: 20,
-    annual_rate_percent: 3.7,
-    timeframe_years: 30,
+    price: 300000,
+    savings: 75000,
+    savings_percent: 25,
+    annual_rate_percent: 3.70,
+    timeframe_years: 25,
     location: "madrid",
     is_second_hand: true
 };
@@ -102,9 +102,9 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-    data.price = parseFloat(data.price);
-    data.savings = parseFloat(data.savings);
-    data.annual_rate_percent = parseFloat(data.annual_rate_percent);
+    data.price = parseFloat(data.price.replace('.', '').replace(',', '.'));
+    data.savings = parseFloat(data.savings.replace('.', '').replace(',', '.'));
+    data.annual_rate_percent = parseFloat(data.annual_rate_percent.replace('.', '').replace(',', '.'));
     data.timeframe_years = parseInt(data.timeframe_years);
     data.location = data.location;
     data.is_second_hand = data.is_second_hand === 'true';
@@ -130,6 +130,8 @@ window.addEventListener('load', async () => {
             if (input) {
                 if (key === 'price' || key === 'savings') {
                     input.value = new Intl.NumberFormat('es-ES').format(placeholderData[key]);
+                } else if (key === 'annual_rate_percent') {
+                    input.value = placeholderData[key].toFixed(2).replace('.', ',');
                 } else {
                     input.value = placeholderData[key];
                 }
@@ -137,11 +139,14 @@ window.addEventListener('load', async () => {
         });
 
         const savingsPercentInput = document.getElementById('savings_percent')
-        savingsPercentInput.value = ((placeholderData.savings / placeholderData.price) * 100).toFixed(2);
+        savingsPercentInput.value = ((placeholderData.savings / placeholderData.price) * 100).toFixed(2).replace('.', ',');
 
         // Apply formatting to price and savings inputs
         updateMoneyQuantityFormat(document.getElementById('price'));
         updateMoneyQuantityFormat(document.getElementById('savings'));
+        updatePercentQuantityFormat(document.getElementById('savings_percent'));
+        updatePercentQuantityFormat(document.getElementById('annual_rate_percent'));
+        updateYearsQuantityFormat(document.getElementById('timeframe_years'));
 
     } catch (error) {
         console.error('Error displaying placeholder results:', error);
@@ -152,15 +157,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const priceInput = document.getElementById('price');
     const savingsInput = document.getElementById('savings');
     const savingsPercentInput = document.getElementById('savings_percent');
+    const annualRatePercentInput = document.getElementById('annual_rate_percent');
+    const timeframeYearsInput = document.getElementById('timeframe_years');
+
     const tabs = document.querySelectorAll('.tab');
     const contents = document.querySelectorAll('.tab-content');
-
     function updateSavingsFromPercent() {
         const price = parseFloat(priceInput.value.replace(/\D/g, ''));
-        const savingsPercent = parseFloat(savingsPercentInput.value);
+        const savingsPercent = parseFloat(savingsPercentInput.value.replace(',', '.'));
         if (!isNaN(price) && !isNaN(savingsPercent)) {
             const savings = (savingsPercent / 100) * price;
-            savingsInput.value = savings.toFixed(2);
+            const savingsStr = savings.toFixed(0);
+            savingsInput.value = savingsStr;
+            updateMoneyQuantityFormat(savingsInput, null);
         }
     }
 
@@ -169,7 +178,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const savings = parseFloat(savingsInput.value.replace(/\D/g, ''));
         if (!isNaN(price) && !isNaN(savings)) {
             const savingsPercent = (savings / price) * 100;
-            savingsPercentInput.value = savingsPercent.toFixed(2);
+            const savingsPercentStr = savingsPercent.toFixed(2).replace('.', ',');
+            savingsPercentInput.value = savingsPercentStr;
+            updatePercentQuantityFormat(savingsPercentInput, null);
         }
     }
 
@@ -178,7 +189,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const savings = parseFloat(savingsInput.value.replace(/\D/g, ''));
         if (!isNaN(price) && !isNaN(savings)) {
             const savingsPercent = (savings / price) * 100;
-            savingsPercentInput.value = savingsPercent.toFixed(2);
+            const savingsPercentStr = savingsPercent.toFixed(2).replace('.', ',');
+            savingsPercentInput.value = savingsPercentStr;
+            updatePercentQuantityFormat(savingsPercentInput, null);
         }
     }
 
@@ -200,28 +213,116 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // Add event listener for formatting
     priceInput.addEventListener('input', function (e) {
-        updateMoneyQuantityFormat(this);
+        updateMoneyQuantityFormat(this, e);
     });
     savingsInput.addEventListener('input', function (e) {
-        updateMoneyQuantityFormat(this);
+        updateMoneyQuantityFormat(this, e);
+    });
+    savingsPercentInput.addEventListener('input', function (e) {
+        updatePercentQuantityFormat(this, e);
+    });
+    annualRatePercentInput.addEventListener('input', function (e) {
+        updatePercentQuantityFormat(this, e);
+    });
+    timeframeYearsInput.addEventListener('input', function (e) {
+        updateYearsQuantityFormat(this, e);
+    });
+    timeframeYearsInput.addEventListener('blur', function (e) {
+        onBlurYearsQuantityFormat(this, e);
     });
 });
 
-function updateMoneyQuantityFormat(inputElement) {
+function updateMoneyQuantityFormat(inputElement, event) {
+    // We want no decimals, and a dot as thousands separator
+
+    // Store the current cursor position
     const cursorPosition = inputElement.selectionStart;
-    const oldLength = inputElement.value.length;
+
+    // Remove any non-digit characters from the input
     let value = inputElement.value.replace(/\D/g, '');
 
-    if (value) {
-        value = parseInt(value, 10).toString();
-        const formattedValue = new Intl.NumberFormat('es-ES').format(value);
-        inputElement.value = formattedValue;
-
-        // Calculate new cursor position
-        const newLength = inputElement.value.length;
-        const newPosition = cursorPosition - (oldLength - newLength);
-
-        // Set the cursor back to the calculated position
-        inputElement.setSelectionRange(newPosition, newPosition);
+    // Convert to a number and format with thousands separator
+    if (value !== '') {
+        const number = parseInt(value, 10);
+        value = number.toLocaleString('es-ES');
     }
+
+    // If len is 4, add dot in the second position
+    if (value.length === 4) {
+        value = value.slice(0, 1) + '.' + value.slice(1);
+    }
+
+    // Calculate the difference in length after formatting
+    const lengthDifference = value.length - inputElement.value.length;
+
+    // Update the input value
+    inputElement.value = value;
+
+    // Adjust the cursor position
+    const newPosition = cursorPosition + lengthDifference;
+    inputElement.setSelectionRange(newPosition, newPosition);
+
+    // If event was backspace and newPosition is just after one of the ".", move cursor one further to the left
+    if (event && event.inputType === 'deleteContentBackward' && newPosition > 0 && inputElement.value[newPosition - 1] === '.') {
+        inputElement.setSelectionRange(newPosition - 1, newPosition - 1);
+    }
+}
+
+
+function updatePercentQuantityFormat(inputElement, event) {
+    // Store the current cursor position
+    const cursorPosition = inputElement.selectionStart;
+
+    // Remove any non-digit characters except for the first comma
+    let value = inputElement.value.replace(/[^\d,]/g, '');
+    const commaIndex = value.indexOf(',');
+    if (commaIndex !== -1) {
+        value = value.slice(0, commaIndex + 1) + value.slice(commaIndex + 1).replace(/,/g, '');
+    }
+
+    // Ensure the value doesn't exceed 999,99
+    let [integerPart, decimalPart] = value.split(',');
+    integerPart = integerPart.slice(0, 3);
+    if (parseInt(integerPart) > 999) {
+        integerPart = '999';
+    }
+    if (decimalPart) {
+        decimalPart = decimalPart.slice(0, 2);
+    }
+
+    // Reconstruct the value, allowing a trailing comma
+    value = integerPart + (value.endsWith(',') || decimalPart ? ',' + (decimalPart || '') : '');
+
+    // Update the input value
+    inputElement.value = value;
+
+    // Adjust the cursor position
+    const newPosition = Math.min(cursorPosition, value.length);
+    inputElement.setSelectionRange(newPosition, newPosition);
+}
+
+
+function updateYearsQuantityFormat(inputElement, event) {
+    // We want no decimals, no thousands separator, and 99 years max
+    let value = inputElement.value.replace(/\D/g, '');
+    inputElement.value = value;
+    const newPosition = Math.min(cursorPosition, value.length);
+    inputElement.setSelectionRange(newPosition, newPosition);
+}
+
+
+function onBlurYearsQuantityFormat(inputElement) {
+    // Min 1 year, max 40 years
+    let value = inputElement.value.replace(/\D/g, '');
+    value = Math.min(value, 40);
+    value = Math.max(value, 1);
+    inputElement.value = value;
+}
+
+function onBlurPriceQuantityFormat(inputElement) {
+    // Min 1000€, max 100.000€
+    let value = inputElement.value.replace(/\D/g, '');
+    value = Math.min(value, 100000);
+    value = Math.max(value, 1000);
+    inputElement.value = value;
 }
