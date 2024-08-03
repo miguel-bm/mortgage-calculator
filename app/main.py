@@ -52,14 +52,35 @@ async def read_root(request: Request):
 @app.post("/calculate", response_model=MortgageResponse)
 async def calculate_mortgage(request: MortgageRequest) -> MortgageResponse:
     try:
-        # Calculate savings amount
         savings_amount = request.savings
+        price = request.price
+
+        # Calculate tax rate
+        tax_rate = (
+            TAX_RATES.get(request.location, 0.06)
+            if request.is_second_hand
+            else NEW_BUILDING_TAX_RATE
+        )
+
+        # Calculate tax expenses
+        tax_expenses = price * tax_rate
+
+        # Calculate total expenses
+        notary_expenses = 1105
+        registry_expenses = 588
+        administrative_expenses = 300
+        appraisal_expenses = price / 1000
+
+        total_expenses = (
+            tax_expenses
+            + notary_expenses
+            + registry_expenses
+            + administrative_expenses
+            + appraisal_expenses
+        )
 
         # Calculate mortgage amount
-        mortgage_amount = request.price - savings_amount
-
-        # Calculate financing percent
-        financing_percent = (mortgage_amount / request.price) * 100
+        mortgage_amount = price + total_expenses - savings_amount
 
         # Calculate monthly payment
         monthly_rate = (request.annual_rate_percent / 100) / 12
@@ -72,34 +93,14 @@ async def calculate_mortgage(request: MortgageRequest) -> MortgageResponse:
         total_payments = monthly_payment * num_payments
         mortgage_interest = total_payments - mortgage_amount
 
-        tax_rate = (
-            TAX_RATES.get(request.location, 0.06)
-            if request.is_second_hand
-            else NEW_BUILDING_TAX_RATE
-        )
+        total_cost = price + mortgage_interest + total_expenses
 
-        # Calculate tax expenses
-        tax_expenses = request.price * tax_rate
-
-        # Expenses
-        notary_expenses = 0.01 * request.price  # 1% of property price
-        registry_expenses = 0.005 * request.price  # 0.5% of property price
-        administrative_expenses = 500  # Fixed amount
-        appraisal_expenses = 300  # Fixed amount
-
-        # Calculate total expenses and total cost
-        total_expenses = (
-            tax_expenses
-            + notary_expenses
-            + registry_expenses
-            + administrative_expenses
-            + appraisal_expenses
-        )
-        total_cost = request.price + mortgage_interest + total_expenses
+        # Calculate financing percent
+        financing_percent = (mortgage_amount / price) * 100
 
         return MortgageResponse(
             inputs=MortgageRequest(
-                price=request.price,
+                price=price,
                 savings=savings_amount,
                 annual_rate_percent=request.annual_rate_percent,
                 timeframe_years=request.timeframe_years,

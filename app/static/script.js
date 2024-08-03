@@ -2,7 +2,7 @@ const placeholderData = {
     price: 300000,
     savings: 75000,
     savings_percent: 25,
-    annual_rate_percent: 3.70,
+    annual_rate_percent: 2.70,
     timeframe_years: 25,
     location: "madrid",
     is_second_hand: true
@@ -122,6 +122,102 @@ async function calculateMortgage(input_data) {
     }
 }
 
+// Add these helper functions
+function formatToRaw(value, type) {
+    if (type === 'money') {
+        return value.replace(/\./g, '');
+    } else if (type === 'percent') {
+        return value.replace(',', '.');
+    }
+    return value;
+}
+
+function rawToFormatted(value, type) {
+    if (type === 'money') {
+        return new Intl.NumberFormat('es-ES').format(parseFloat(value));
+    } else if (type === 'percent') {
+        return parseFloat(value).toFixed(2).replace('.', ',');
+    }
+    return value;
+}
+
+// Modify the getUrlParams function
+function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    const result = {};
+    for (const [key, value] of params) {
+        if (key === 'price' || key === 'savings') {
+            result[key] = parseFloat(value);
+        } else if (key === 'annual_rate_percent' || key === 'savings_percent') {
+            result[key] = parseFloat(value.replace(',', '.'));
+        } else if (key === 'is_second_hand') {
+            result[key] = value === 'true';
+        } else {
+            result[key] = value;
+        }
+    }
+    return result;
+}
+
+// Modify the window load event listener
+window.addEventListener('load', async () => {
+    try {
+        const urlParams = getUrlParams();
+        const initialData = Object.keys(urlParams).length > 0 ? urlParams : placeholderData;
+
+        // Update form with URL parameters or placeholder data
+        Object.keys(initialData).forEach(key => {
+            const input = document.getElementById(key);
+            if (input) {
+                if (key === 'price' || key === 'savings') {
+                    input.value = rawToFormatted(initialData[key], 'money');
+                } else if (key === 'annual_rate_percent' || key === 'savings_percent') {
+                    input.value = rawToFormatted(initialData[key], 'percent');
+                } else if (key === 'is_second_hand') {
+                    input.value = initialData[key];
+                } else {
+                    input.value = initialData[key];
+                }
+            }
+        });
+
+        // Calculate and display results
+        const results = await calculateMortgage(initialData);
+        displayResults(results);
+
+        // Apply formatting to inputs
+        updateMoneyQuantityFormat(document.getElementById('price'));
+        updateMoneyQuantityFormat(document.getElementById('savings'));
+        updatePercentQuantityFormat(document.getElementById('savings_percent'));
+        updatePercentQuantityFormat(document.getElementById('annual_rate_percent'));
+        updateYearsQuantityFormat(document.getElementById('timeframe_years'));
+
+        // Update URL with current parameters
+        updateUrlWithFormData();
+
+    } catch (error) {
+        console.error('Error displaying initial results:', error);
+    }
+});
+
+// Modify the updateUrlWithFormData function
+function updateUrlWithFormData() {
+    const formData = new FormData(form);
+    const params = new URLSearchParams();
+    for (const [key, value] of formData.entries()) {
+        if (key === 'price' || key === 'savings') {
+            params.append(key, formatToRaw(value, 'money'));
+        } else if (key === 'annual_rate_percent' || key === 'savings_percent') {
+            params.append(key, formatToRaw(value, 'percent'));
+        } else {
+            params.append(key, value);
+        }
+    }
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    history.pushState(null, '', newUrl);
+}
+
+// Modify the form submit event listener
 form.addEventListener('submit', async (e) => {
     console.log('Form submitted');
 
@@ -139,43 +235,9 @@ form.addEventListener('submit', async (e) => {
         const results = await calculateMortgage(data);
         displayResults(results);
         console.log('Results:', results);
+        updateUrlWithFormData(); // Update URL after form submission
     } catch (error) {
         console.error('Error displaying results:', error);
-    }
-});
-
-// Display placeholder results on page load
-window.addEventListener('load', async () => {
-    try {
-        const placeholderResults = await calculateMortgage(placeholderData);
-        displayResults(placeholderResults);
-
-        // Populate form with placeholder data
-        Object.keys(placeholderData).forEach(key => {
-            const input = document.getElementById(key);
-            if (input) {
-                if (key === 'price' || key === 'savings') {
-                    input.value = new Intl.NumberFormat('es-ES').format(placeholderData[key]);
-                } else if (key === 'annual_rate_percent') {
-                    input.value = placeholderData[key].toFixed(2).replace('.', ',');
-                } else {
-                    input.value = placeholderData[key];
-                }
-            }
-        });
-
-        const savingsPercentInput = document.getElementById('savings_percent')
-        savingsPercentInput.value = ((placeholderData.savings / placeholderData.price) * 100).toFixed(2).replace('.', ',');
-
-        // Apply formatting to price and savings inputs
-        updateMoneyQuantityFormat(document.getElementById('price'));
-        updateMoneyQuantityFormat(document.getElementById('savings'));
-        updatePercentQuantityFormat(document.getElementById('savings_percent'));
-        updatePercentQuantityFormat(document.getElementById('annual_rate_percent'));
-        updateYearsQuantityFormat(document.getElementById('timeframe_years'));
-
-    } catch (error) {
-        console.error('Error displaying placeholder results:', error);
     }
 });
 

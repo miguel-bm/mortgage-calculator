@@ -22,6 +22,9 @@
             --text-color: #2c3e50;
             --border-color: #424242;
             --bulma-tabs-border-bottom-width: 20px;
+            --savings-color: #1028c4;
+            --mortgage-color: #1028c48d;
+            --interest-color: #1028c442;
         }
 
         body {
@@ -433,10 +436,41 @@
         }
 
         .separator {
-            width: 75%;
+            width: 80%;
             margin: 20px auto;
             border: 0;
             border-top: 1px solid #ccc;
+        }
+
+        .comparison-graph-container {
+            width: 500px;
+            max-width: 90%;
+            height: 20px;
+            margin: 0 auto;
+        }
+
+        .comparison-graph-row {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+        .comparison-graph-savings {
+            width: 20%;
+            height: 24px;
+            background-color: var(--savings-color);
+        }
+
+        .comparison-graph-mortgage {
+            width: 50%;
+            height: 24px;
+            background-color: var(--mortgage-color);
+        }
+
+        .comparison-graph-interest {
+            width: 30%;
+            height: 24px;
+            background-color: var(--interest-color);
         }
     </style>
 </head>
@@ -612,7 +646,17 @@
                             </div>
                         </div>
                         <hr class="separator">
-                        <div id="comparison-graph-container"></div>
+                        <div id="comparison-graph-container" class="comparison-graph-container">
+                            <div id="comparison-graph-first-row" class="comparison-graph-row">
+                                <div class="comparison-graph-savings"></div>
+                                <div class="comparison-graph-mortgage"></div>
+                                <div class="comparison-graph-interest"></div>
+                            </div>
+                            <div id="comparison-graph-second-row" class="comparison-graph-row">
+                                <div class="comparison-graph-price"></div>
+                                <div class="comparison-graph-taxes"></div>
+                            </div>
+                        </div>
                     </div>
                     <div id="amortization" class="tab-content">
                         <h2>Plan de Amortización</h2>
