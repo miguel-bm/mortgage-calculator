@@ -515,12 +515,12 @@ button:hover {
 }
 
 .right-graph .price-bar {
-    height: 80%;
+    height: 60%;
     background-color: var(--price-color);
 }
 
 .right-graph .expenses-bar {
-    height: 20%;
+    height: 10%;
     background-color: var(--expenses-color);
 }
 
