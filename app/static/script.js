@@ -16,6 +16,7 @@ function displayResults(data) {
 
     // Update the monthly payment amount in the UI
     const monthlyPaymentElement = document.getElementById('monthly-payment-amount');
+    const monthlyPaymentDecimalsElement = document.getElementById('monthly-payment-decimals');
     if (monthlyPaymentElement) {
         // Format the monthly payment as a currency string
         let formattedPayment = new Intl.NumberFormat('es-ES', {
@@ -28,8 +29,14 @@ function displayResults(data) {
             formattedPayment = formattedPayment.slice(0, 1) + '.' + formattedPayment.slice(1);
         }
 
+        // get the whole part
+        const wholePart = formattedPayment.split(',')[0];
+        const decimalsPart = ',' + formattedPayment.split(',')[1];
+
         // Update the content of the element
-        monthlyPaymentElement.textContent = formattedPayment;
+        monthlyPaymentElement.textContent = wholePart;
+        monthlyPaymentDecimalsElement.textContent = decimalsPart;
+
     }
 
     resultsContainer.innerHTML = `
