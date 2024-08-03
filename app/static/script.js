@@ -12,7 +12,7 @@ const form = document.getElementById('mortgage-form');
 const resultsContainer = document.getElementById('results');
 let resultsChart;
 
-function displayResults(data, initialData) {
+function displayResults(data) {
     // Update the monthly payment amount in the UI
     const monthlyPaymentElement = document.getElementById('monthly-payment-amount');
     const monthlyPaymentDecimalsElement = document.getElementById('monthly-payment-decimals');
@@ -36,32 +36,26 @@ function displayResults(data, initialData) {
 
     document.getElementById('interest-value').textContent = formatCurrency(data.mortgage_interest);
     document.getElementById('mortgage-value').textContent = formatCurrency(data.mortgage_amount);
-    document.getElementById('savings-value').textContent = formatCurrency(initialData.savings);
+    document.getElementById('savings-value').textContent = formatCurrency(data.inputs.savings);
     document.getElementById('left-total-value').textContent = formatCurrency(data.total_cost);
     document.getElementById('expenses-value').textContent = formatCurrency(data.total_expenses);
-    document.getElementById('price-value').textContent = formatCurrency(initialData.price);
-    document.getElementById('right-total-value').textContent = formatCurrency(initialData.price + data.total_expenses);
+    document.getElementById('price-value').textContent = formatCurrency(data.inputs.price);
+    document.getElementById('right-total-value').textContent = formatCurrency(data.inputs.price + data.total_expenses);
 
 
     // Helper function to set bar height with a minimum value
     const setBarHeight = (selector, value, total) => {
         const bar = document.querySelector(selector);
-        // Remove existing height style
-        bar.style.removeProperty('height');
-        // Force reflow
-        void bar.offsetHeight;
         const percentage = Math.max((value / total) * 100, 0.5); // Ensure a minimum height of 0.5%
         bar.style.height = `${percentage}%`;
-        // Set !important to override inline styles
-        bar.style.setProperty('height', `${percentage}%`, 'important');
     };
 
     // Update the graph bars
-    const totalLeft = data.mortgage_interest + data.mortgage_amount + initialData.savings;
+    const totalLeft = data.mortgage_interest + data.mortgage_amount + data.inputs.savings;
     setBarHeight('.left-graph .interest-bar', data.mortgage_interest, totalLeft);
     setBarHeight('.left-graph .mortgage-bar', data.mortgage_amount, totalLeft);
-    setBarHeight('.left-graph .savings-bar', initialData.savings, totalLeft);
-    setBarHeight('.right-graph .price-bar', initialData.price, totalLeft);
+    setBarHeight('.left-graph .savings-bar', data.inputs.savings, totalLeft);
+    setBarHeight('.right-graph .price-bar', data.inputs.price, totalLeft);
     setBarHeight('.right-graph .expenses-bar', data.total_expenses, totalLeft);
     document.body.offsetHeight;
 }
@@ -193,7 +187,7 @@ window.addEventListener('load', async () => {
 
         // Calculate and display results
         const results = await calculateMortgage(initialData);
-        displayResults(results, initialData);
+        displayResults(results);
 
         // Apply formatting to inputs
         updateMoneyQuantityFormat(document.getElementById('price'));
