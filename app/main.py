@@ -17,7 +17,23 @@ app.mount(
 )
 
 TAX_RATES = {
+    "andalucia": 0.06,
+    "aragon": 0.08,
+    "asturias": 0.08,
+    "baleares": 0.04,
+    "canarias": 0.05,
+    "cantabria": 0.08,
+    "castilla_y_leon": 0.08,
+    "castilla_la_mancha": 0.06,
+    "cataluna": 0.10,
+    "valencia": 0.10,
+    "extremadura": 0.07,
+    "galicia": 0.07,
     "madrid": 0.06,
+    "murcia": 0.08,
+    "navarra": 0.05,
+    "pais_vasco": 0.04,
+    "rioja": 0.07,
 }
 NEW_BUILDING_TAX_RATE = 0.10
 
