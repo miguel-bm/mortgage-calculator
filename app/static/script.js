@@ -85,18 +85,20 @@ function updateAmortizationChart(amortizationData) {
         labels: labels,
         datasets: [
             {
-                label: 'Intereses pendientes',
-                data: amortizationData.interests_left,
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                fill: true,
-            },
-            {
                 label: 'Capital pendiente',
                 data: amortizationData.principal_left,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: '#1028c48d',
+                borderColor: '#1028c48d',
                 fill: true,
+                pointRadius: 0,
+            },
+            {
+                label: 'Intereses pendientes',
+                data: amortizationData.interests_left,
+                backgroundColor: '#1028c442',
+                borderColor: '#1028c442',
+                fill: true,
+                pointRadius: 0,
             }
         ]
     };
@@ -110,20 +112,34 @@ function updateAmortizationChart(amortizationData) {
                     display: true,
                     text: 'Meses'
                 },
-                stacked: true
+                stacked: true,
+                grid: {
+                    display: false
+                }
             },
             y: {
                 title: {
                     display: true,
                     text: 'Cantidad (€)'
                 },
-                stacked: true
+                stacked: true,
+                min: 0,
+                ticks: {
+                    callback: function (value) {
+                        if (value >= 1000000) {
+                            return (value / 1000000).toFixed(1) + 'M';
+                        } else if (value >= 1000) {
+                            return (value / 1000).toFixed(0) + 'k';
+                        } else {
+                            return value.toLocaleString('es-ES');
+                        }
+                    }
+                }
             }
         },
         plugins: {
             title: {
-                display: true,
-                text: 'Amortización de la hipoteca'
+                display: false
             },
             tooltip: {
                 mode: 'index',
@@ -135,6 +151,7 @@ function updateAmortizationChart(amortizationData) {
     if (amortizationChart) {
         // If the chart already exists, update its data
         amortizationChart.data = chartData;
+        amortizationChart.options = chartOptions;
         amortizationChart.update();
     } else {
         // If the chart doesn't exist, create a new one
