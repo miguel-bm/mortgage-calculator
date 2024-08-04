@@ -404,6 +404,51 @@
                             <canvas id="monthly-payment-chart"></canvas>
                         </div>
 
+                        <!-- New section -->
+                        <div class="amortization-table-container">
+                            <div class="amortization-tabs">
+                                <button class="amortization-tab active" data-tab="yearly">Por año</button>
+                                <button class="amortization-tab" data-tab="monthly">Por mes</button>
+                            </div>
+                            <div id="yearly-table" class="amortization-content active">
+                                <table class="amortization-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Año</th>
+                                            <th>Interés</th>
+                                            <th>Amortizado</th>
+                                            <th>Total pagado</th>
+                                            <th>Pendiente de pago</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="yearly-table-body">
+                                        <!-- Rows will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="monthly-table" class="amortization-content">
+                                <div class="year-selector">
+                                    <button id="prev-year">&lt;</button>
+                                    <span id="selected-year">Año 1</span>
+                                    <button id="next-year">&gt;</button>
+                                </div>
+                                <table class="amortization-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mes</th>
+                                            <th>Interés</th>
+                                            <th>Amortizado</th>
+                                            <th>Total pagado</th>
+                                            <th>Pendiente de pago</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="monthly-table-body">
+                                        <!-- Rows will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
                     <div id="analysis" class="tab-content">
                         <h2>Análisis Financiero</h2>

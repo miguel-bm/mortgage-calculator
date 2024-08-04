@@ -78,6 +78,9 @@ function displayResults(data) {
 
     // Update the monthly payment chart
     updateMonthlyPaymentChart(data.amortization);
+
+    // Update the amortization tables
+    updateAmortizationTables(data.amortization);
 }
 
 function updateAmortizationChart(amortizationData) {
@@ -248,6 +251,79 @@ function updateMonthlyPaymentChart(amortizationData) {
             options: chartOptions
         });
     }
+}
+
+function updateAmortizationTables(amortizationData) {
+    const yearlyTableBody = document.getElementById('yearly-table-body');
+    const monthlyTableBody = document.getElementById('monthly-table-body');
+
+    // Clear existing table rows
+    yearlyTableBody.innerHTML = '';
+    monthlyTableBody.innerHTML = '';
+
+    // Populate yearly table
+    const yearsCount = Math.ceil(amortizationData.principal_left.length / 12);
+    for (let year = 1; year <= yearsCount; year++) {
+        const rowIndex = (year - 1) * 12;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${year}</td>
+            <td>${formatCurrency(amortizationData.yearly_interest_paid[year - 1])}</td>
+            <td>${formatCurrency(amortizationData.yearly_principal_paid[year - 1])}</td>
+            <td>${formatCurrency(amortizationData.yearly_interest_paid[year - 1] + amortizationData.yearly_principal_paid[year - 1])}</td>
+            <td>${formatCurrency(amortizationData.principal_left[rowIndex + 11] || 0)}</td>
+        `;
+        yearlyTableBody.appendChild(row);
+    }
+
+    // Populate monthly table (initially for the first year)
+    populateMonthlyTable(1, amortizationData);
+
+    // Set up year selector for monthly table
+    const prevYearBtn = document.getElementById('prev-year');
+    const nextYearBtn = document.getElementById('next-year');
+    const selectedYearSpan = document.getElementById('selected-year');
+    let currentYear = 1;
+
+    prevYearBtn.addEventListener('click', () => {
+        if (currentYear > 1) {
+            currentYear--;
+            selectedYearSpan.textContent = `Año ${currentYear}`;
+            populateMonthlyTable(currentYear, amortizationData);
+        }
+    });
+
+    nextYearBtn.addEventListener('click', () => {
+        if (currentYear < yearsCount) {
+            currentYear++;
+            selectedYearSpan.textContent = `Año ${currentYear}`;
+            populateMonthlyTable(currentYear, amortizationData);
+        }
+    });
+}
+
+function populateMonthlyTable(year, amortizationData) {
+    const monthlyTableBody = document.getElementById('monthly-table-body');
+    monthlyTableBody.innerHTML = '';
+
+    const startIndex = (year - 1) * 12;
+    const endIndex = Math.min(startIndex + 12, amortizationData.principal_left.length);
+
+    for (let i = startIndex; i < endIndex; i++) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${(i % 12) + 1}</td>
+            <td>${formatCurrency(amortizationData.monthly_interest_paid[i])}</td>
+            <td>${formatCurrency(amortizationData.monthly_principal_paid[i])}</td>
+            <td>${formatCurrency(amortizationData.monthly_interest_paid[i] + amortizationData.monthly_principal_paid[i])}</td>
+            <td>${formatCurrency(amortizationData.principal_left[i])}</td>
+        `;
+        monthlyTableBody.appendChild(row);
+    }
+}
+
+function formatCurrency(value) {
+    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value);
 }
 
 async function calculateMortgage(input_data) {
@@ -478,6 +554,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
     timeframeYearsInput.addEventListener('blur', function (e) {
         onBlurYearsQuantityFormat(this, e);
+    });
+
+    // Add event listeners for amortization tabs
+    const amortizationTabs = document.querySelectorAll('.amortization-tab');
+    const amortizationContents = document.querySelectorAll('.amortization-content');
+
+    amortizationTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+
+            amortizationTabs.forEach(t => t.classList.remove('active'));
+            amortizationContents.forEach(c => c.classList.remove('active'));
+
+            tab.classList.add('active');
+            document.getElementById(`${tabId}-table`).classList.add('active');
+        });
     });
 });
 
