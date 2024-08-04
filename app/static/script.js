@@ -180,14 +180,18 @@ function updateMonthlyPaymentChart(amortizationData) {
                 data: amortizationData.monthly_principal_paid,
                 backgroundColor: '#1028c48d',
                 borderColor: '#1028c48d',
-                borderWidth: 1,
+                fill: true,
+                pointRadius: 0,
+                borderWidth: 0,
             },
             {
                 label: 'Pago de los intereses',
                 data: amortizationData.monthly_interest_paid,
                 backgroundColor: '#1028c442',
                 borderColor: '#1028c442',
-                borderWidth: 1,
+                fill: true,
+                pointRadius: 0,
+                borderWidth: 0,
             }
         ]
     };
@@ -201,7 +205,6 @@ function updateMonthlyPaymentChart(amortizationData) {
                     display: true,
                     text: 'Meses'
                 },
-                stacked: true,
                 grid: {
                     display: false
                 }
@@ -212,6 +215,8 @@ function updateMonthlyPaymentChart(amortizationData) {
                     text: 'Cantidad (€)'
                 },
                 stacked: true,
+                min: 0,
+                max: Math.max(...amortizationData.monthly_principal_paid, ...amortizationData.monthly_interest_paid),
                 ticks: {
                     callback: function (value) {
                         return value.toLocaleString('es-ES');
@@ -238,7 +243,7 @@ function updateMonthlyPaymentChart(amortizationData) {
     } else {
         // If the chart doesn't exist, create a new one
         monthlyPaymentChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: chartData,
             options: chartOptions
         });
