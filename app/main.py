@@ -86,7 +86,9 @@ class MortgageResponse(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(
+        "index.html", {"request": request}, media_type="text/html"
+    )
 
 
 @app.post("/amortization", response_model=AmortizationResponse)
