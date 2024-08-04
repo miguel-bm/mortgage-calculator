@@ -40,6 +40,7 @@ function displayResults(data) {
 
     // Update the comparison graph values
     const formatCurrency = (value) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
+    const formatCurrencyNoEur = (value) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
 
     document.getElementById('interest-value').textContent = formatCurrency(data.mortgage_interest);
     document.getElementById('mortgage-value').textContent = formatCurrency(data.mortgage_amount);
@@ -65,6 +66,10 @@ function displayResults(data) {
     setBarHeight('.right-graph .price-bar', data.inputs.price, totalLeft);
     setBarHeight('.right-graph .expenses-bar', data.total_expenses, totalLeft);
     document.body.offsetHeight;
+
+    document.getElementById('loan-amount').textContent = formatCurrencyNoEur(data.mortgage_amount);
+    document.getElementById('total-interest').textContent = formatCurrencyNoEur(data.mortgage_interest);
+    document.getElementById('total-loan-cost').textContent = formatCurrencyNoEur(data.mortgage_amount + data.mortgage_interest);
 
 
     //Update the amortization chart
