@@ -98,17 +98,17 @@ function updateAmortizationChart(amortizationData) {
             {
                 label: 'Capital pendiente',
                 data: amortizationData.principal_left,
-                backgroundColor: '#1028c48d',
-                borderColor: '#1028c48d',
-                fill: true,
+                borderColor: '#1028c4',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
                 pointRadius: 0,
             },
             {
                 label: 'Intereses pendientes',
                 data: amortizationData.interests_left,
-                backgroundColor: '#1028c442',
                 borderColor: '#1028c442',
-                fill: true,
+                backgroundColor: 'transparent',
+                borderWidth: 2,
                 pointRadius: 0,
             }
         ]
@@ -117,15 +117,34 @@ function updateAmortizationChart(amortizationData) {
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 30,
+                right: 10,
+                top: 10,
+                bottom: 20
+            }
+        },
         scales: {
             x: {
                 title: {
                     display: true,
-                    text: 'Meses'
+                    text: 'Años desde el comienzo'
                 },
-                stacked: true,
                 grid: {
                     display: false
+                },
+                ticks: {
+                    callback: function (value, index, values) {
+                        if (value % 12 === 0) {
+                            return Math.floor(value / 12);
+                        }
+                        return '';
+                    },
+                    autoSkip: false,
+                    includeBounds: true,
+                    minRotation: 0,
+                    maxRotation: 0
                 }
             },
             y: {
@@ -133,7 +152,6 @@ function updateAmortizationChart(amortizationData) {
                     display: true,
                     text: 'Cantidad (€)'
                 },
-                stacked: true,
                 min: 0,
                 ticks: {
                     callback: function (value) {
@@ -206,14 +224,34 @@ function updateMonthlyPaymentChart(amortizationData) {
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 15,
+                right: 10,
+                top: 10,
+                bottom: 20
+            }
+        },
         scales: {
             x: {
                 title: {
                     display: true,
-                    text: 'Meses'
+                    text: 'Años desde el comienzo'
                 },
                 grid: {
                     display: false
+                },
+                ticks: {
+                    callback: function (value, index, values) {
+                        if (value % 12 === 0) {
+                            return Math.floor(value / 12);
+                        }
+                        return '';
+                    },
+                    autoSkip: false,
+                    includeBounds: true,
+                    minRotation: 0,
+                    maxRotation: 0
                 }
             },
             y: {
@@ -223,7 +261,7 @@ function updateMonthlyPaymentChart(amortizationData) {
                 },
                 stacked: true,
                 min: 0,
-                max: Math.max(...amortizationData.monthly_principal_paid, ...amortizationData.monthly_interest_paid),
+                max: amortizationData.monthly_principal_paid[0] + amortizationData.monthly_interest_paid[0],
                 ticks: {
                     callback: function (value) {
                         return value.toLocaleString('es-ES');
