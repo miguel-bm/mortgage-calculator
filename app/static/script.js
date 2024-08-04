@@ -12,6 +12,7 @@ const form = document.getElementById('mortgage-form');
 const resultsContainer = document.getElementById('results');
 let resultsChart;
 let amortizationChart;
+let monthlyPaymentChart; // New variable for the monthly payment chart
 
 function displayResults(data) {
     // Update the monthly payment amount in the UI
@@ -74,6 +75,9 @@ function displayResults(data) {
 
     //Update the amortization chart
     updateAmortizationChart(data.amortization);
+
+    // Update the monthly payment chart
+    updateMonthlyPaymentChart(data.amortization);
 }
 
 function updateAmortizationChart(amortizationData) {
@@ -157,6 +161,84 @@ function updateAmortizationChart(amortizationData) {
         // If the chart doesn't exist, create a new one
         amortizationChart = new Chart(ctx, {
             type: 'line',
+            data: chartData,
+            options: chartOptions
+        });
+    }
+}
+
+function updateMonthlyPaymentChart(amortizationData) {
+    const ctx = document.getElementById('monthly-payment-chart').getContext('2d');
+
+    // Prepare the data for the chart
+    const labels = Array.from({ length: amortizationData.monthly_principal_paid.length }, (_, i) => i + 1);
+    const chartData = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Pago del préstamo',
+                data: amortizationData.monthly_principal_paid,
+                backgroundColor: '#1028c48d',
+                borderColor: '#1028c48d',
+                borderWidth: 1,
+            },
+            {
+                label: 'Pago de los intereses',
+                data: amortizationData.monthly_interest_paid,
+                backgroundColor: '#1028c442',
+                borderColor: '#1028c442',
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Meses'
+                },
+                stacked: true,
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Cantidad (€)'
+                },
+                stacked: true,
+                ticks: {
+                    callback: function (value) {
+                        return value.toLocaleString('es-ES');
+                    }
+                }
+            }
+        },
+        plugins: {
+            title: {
+                display: false
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false
+            }
+        }
+    };
+
+    if (monthlyPaymentChart) {
+        // If the chart already exists, update its data
+        monthlyPaymentChart.data = chartData;
+        monthlyPaymentChart.options = chartOptions;
+        monthlyPaymentChart.update();
+    } else {
+        // If the chart doesn't exist, create a new one
+        monthlyPaymentChart = new Chart(ctx, {
+            type: 'bar',
             data: chartData,
             options: chartOptions
         });
