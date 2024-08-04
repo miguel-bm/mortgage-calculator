@@ -167,6 +167,12 @@ function updateAmortizationChart(amortizationData) {
             }
         },
         plugins: {
+            legend: {
+                labels: {
+                    usePointStyle: true,
+                    pointStyle: 'line'  // Change this to 'rect' for full squares
+                }
+            },
             title: {
                 display: false
             },
