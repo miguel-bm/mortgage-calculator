@@ -31,6 +31,12 @@ function displayResults(data) {
         monthlyPaymentDecimalsElement.textContent = ',' + decimalsPart;
     }
 
+    const loanPercentElement = document.getElementById('loan-percent-amount');
+    loanPercentElement.textContent = data.financing_percent.toFixed(2);
+
+    const interestPercentElement = document.getElementById('interest-percent-amount');
+    interestPercentElement.textContent = data.interest_percent.toFixed(2);
+
     // Update the comparison graph values
     const formatCurrency = (value) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
 
@@ -167,7 +173,12 @@ function getUrlParams() {
 window.addEventListener('load', async () => {
     try {
         const urlParams = getUrlParams();
-        const initialData = Object.keys(urlParams).length > 0 ? urlParams : placeholderData;
+        const initialData = {};
+
+        // Combine urlParams with placeholderData, prioritizing urlParams
+        Object.keys(placeholderData).forEach(key => {
+            initialData[key] = key in urlParams ? urlParams[key] : placeholderData[key];
+        });
 
         // Update form with URL parameters or placeholder data
         Object.keys(initialData).forEach(key => {

@@ -379,56 +379,10 @@ button:hover {
     color: var(--primary-color);
 }
 
-.monthly-payment-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0px;
-    background-color: transparent;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.monthly-payment-label {
-    font-weight: bold;
-    margin-bottom: 0px;
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-}
-
-.monthly-payment-label .info-icon {
-    margin-left: 15px;
-}
-
-.monthly-payment-amount {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-}
-
-.monthly-payment-amount .amount {
-    font-size: 40px;
-    font-weight: bold;
-    color: #333;
-}
-
-.monthly-payment-amount .decimals {
-    font-size: 30px;
-    font-weight: 400;
-    color: #333;
-}
-
-.monthly-payment-amount .currency {
-    font-size: 30px;
-    color: #767676;
-    margin-left: 7px;
-}
 
 .separator {
     width: 80%;
-    margin: 20px auto;
+    margin: 15px auto;
     border: 0;
     border-top: 1px solid #ccc;
 }
@@ -551,4 +505,91 @@ button:hover {
 
 .expenses-color {
     background-color: var(--expenses-color);
+}
+
+.monthly-payment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    background-color: transparent;
+    margin-left: 30px;
+}
+
+.monthly-payment-label {
+    font-weight: bold;
+    margin-bottom: 0px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #666;
+}
+
+.monthly-payment-label .info-icon {
+    margin-left: 15px;
+}
+
+.monthly-payment-amount {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+}
+
+.monthly-payment-amount .amount {
+    font-size: 40px;
+    font-weight: bold;
+    color: #333;
+}
+
+.monthly-payment-amount .decimals {
+    font-size: 30px;
+    font-weight: 400;
+    color: #333;
+}
+
+.monthly-payment-amount .currency {
+    font-size: 30px;
+    color: #767676;
+    margin-left: 7px;
+}
+
+
+.kpis-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    padding: 0 30px;
+}
+
+.monthly-payment-container,
+.loan-percent-container,
+.interest-percent-container {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loan-percent-label,
+.interest-percent-label {
+    color: #666;
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+    align-items: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    font-size: 14px;
+    max-width: 100px;
+}
+
+.loan-percent-amount,
+.interest-percent-amount {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 5px;
 }

@@ -35,6 +35,7 @@ class MortgageResponse(BaseModel):
     mortgage_amount: float
     mortgage_interest: float
     financing_percent: float
+    interest_percent: float
     tax_expenses: float
     notary_expenses: float
     registry_expenses: float
@@ -98,6 +99,9 @@ async def calculate_mortgage(request: MortgageRequest) -> MortgageResponse:
         # Calculate financing percent
         financing_percent = (mortgage_amount / price) * 100
 
+        # Calculate interest percent
+        interest_percent = (mortgage_interest / mortgage_amount) * 100
+
         return MortgageResponse(
             inputs=MortgageRequest(
                 price=price,
@@ -111,6 +115,7 @@ async def calculate_mortgage(request: MortgageRequest) -> MortgageResponse:
             mortgage_amount=mortgage_amount,
             mortgage_interest=mortgage_interest,
             financing_percent=financing_percent,
+            interest_percent=interest_percent,
             tax_expenses=tax_expenses,
             notary_expenses=notary_expenses,
             registry_expenses=registry_expenses,

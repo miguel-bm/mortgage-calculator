@@ -169,21 +169,57 @@
                         <button class="tab" data-tab="analysis">Análisis</button>
                     </div>
                     <div id="payment" class="tab-content active">
-                        <div class="monthly-payment-container">
-                            <div class="monthly-payment-label">
-                                Cuota mensual
-                                <span class="info-icon" tabindex="0">
-                                    <i class="fas fa-info-circle"></i>
-                                    <span class="tooltip-text">
-                                        Esta es la cantidad que pagarás cada mes por tu hipoteca, incluyendo capital e
-                                        intereses.
+                        <div class="kpis-container">
+                            <div class="monthly-payment-container">
+                                <div class="monthly-payment-label">
+                                    Cuota mensual
+                                    <span class="info-icon table-info-icon" tabindex="0">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span class="tooltip-text">
+                                            Esta es la cantidad que pagarás cada mes por tu hipoteca, incluyendo capital
+                                            e
+                                            intereses.
+                                        </span>
                                     </span>
-                                </span>
+                                </div>
+                                <div class="monthly-payment-amount">
+                                    <span class="amount" id="monthly-payment-amount">1.563</span>
+                                    <span class="decimals" id="monthly-payment-decimals">,34</span>
+                                    <span class="currency">€</span>
+                                </div>
                             </div>
-                            <div class="monthly-payment-amount">
-                                <span class="amount" id="monthly-payment-amount">1.563</span>
-                                <span class="decimals" id="monthly-payment-decimals">,34</span>
-                                <span class="currency">€</span>
+                            <div class="loan-percent-container">
+                                <div class="loan-percent-label">
+                                    Porcentaje financiado
+                                    <span class="info-icon table-info-icon" tabindex="0">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span class="tooltip-text">
+                                            Porcentaje del valor de la vivienda que se financia con la hipoteca. Los
+                                            bancos suelen rechazar financiar más del 80% del precio de compra, aunque
+                                            podría subir si se aportan avales y garantías adicionales.
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="loan-percent-amount">
+                                    <span class="amount" id="loan-percent-amount">80</span>
+                                    <span class="unit">%</span>
+                                </div>
+                            </div>
+                            <div class="interest-percent-container">
+                                <div class="interest-percent-label">
+                                    Porcentaje de intereses
+                                    <span class="info-icon table-info-icon" tabindex="0">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span class="tooltip-text">
+                                            Porcentaje del préstamo que pagarás en intereses a lo largo de la vida de la
+                                            hipoteca.
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="interest-percent-amount">
+                                    <span class="amount" id="interest-percent-amount">33</span>
+                                    <span class="unit">%</span>
+                                </div>
                             </div>
                         </div>
                         <hr class="separator">
