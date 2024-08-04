@@ -1,9 +1,10 @@
 from datetime import date, timedelta
 
+import aiofiles
 from dateutil.relativedelta import relativedelta
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -82,9 +83,17 @@ class MortgageResponse(BaseModel):
     amortization: AmortizationResponse
 
 
+# @app.get("/", response_class=HTMLResponse)
+# async def read_root(request: Request):
+#     return FileResponse("static/index.html")
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    return FileResponse("static/index.html")
+    try:
+        async with aiofiles.open("static/index.html", mode="r") as file:
+            content = await file.read()
+        return HTMLResponse(content=content)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Index file not found")
 
 
 @app.post("/amortization", response_model=AmortizationResponse)
