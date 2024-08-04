@@ -663,33 +663,26 @@ button:hover {
     margin-top: 30px;
 }
 
-.amortization-tabs {
+.year-selector {
     display: flex;
-    border-bottom: 1px solid #ccc;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.amortization-tab {
-    padding: 10px 20px;
-    cursor: pointer;
+.year-selector button {
     background: none;
     border: none;
-    font-size: 16px;
-    font-weight: bold;
-    color: #767676;
-}
-
-.amortization-tab.active {
+    font-size: 20px;
+    cursor: pointer;
     color: var(--primary-color);
-    border-bottom: 2px solid var(--primary-color);
+    padding: 0 10px;
 }
 
-.amortization-content {
-    display: none;
-    margin-top: 20px;
-}
-
-.amortization-content.active {
-    display: block;
+#selected-year {
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
 }
 
 .amortization-table {
@@ -711,25 +704,5 @@ button:hover {
 
 .amortization-table th {
     background-color: #f2f2f2;
-    font-weight: bold;
-}
-
-.year-selector {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.year-selector button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: var(--primary-color);
-}
-
-#selected-year {
-    margin: 0 20px;
     font-weight: bold;
 }

@@ -80,7 +80,7 @@ function displayResults(data) {
     updateMonthlyPaymentChart(data.amortization);
 
     // Update the amortization tables
-    updateAmortizationTables(data.amortization);
+    updateAmortizationTables(data.amortization, data.mortgage_amount + data.mortgage_interest);
 }
 
 function updateAmortizationChart(amortizationData) {
@@ -253,7 +253,7 @@ function updateMonthlyPaymentChart(amortizationData) {
     }
 }
 
-function updateAmortizationTables(amortizationData) {
+function updateAmortizationTables(amortizationData, totalToPay) {
     const yearlyTableBody = document.getElementById('yearly-table-body');
     const monthlyTableBody = document.getElementById('monthly-table-body');
 
@@ -262,68 +262,70 @@ function updateAmortizationTables(amortizationData) {
     monthlyTableBody.innerHTML = '';
 
     // Populate yearly table
-    const yearsCount = Math.ceil(amortizationData.principal_left.length / 12);
-    for (let year = 1; year <= yearsCount; year++) {
-        const rowIndex = (year - 1) * 12;
+    amortizationData.all_years.forEach((year, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${year}</td>
-            <td>${formatCurrency(amortizationData.yearly_interest_paid[year - 1])}</td>
-            <td>${formatCurrency(amortizationData.yearly_principal_paid[year - 1])}</td>
-            <td>${formatCurrency(amortizationData.yearly_interest_paid[year - 1] + amortizationData.yearly_principal_paid[year - 1])}</td>
-            <td>${formatCurrency(amortizationData.principal_left[rowIndex + 11] || 0)}</td>
+            <td>${formatTableCurrency(amortizationData.yearly_interest_paid_total[index])}</td>
+            <td>${formatTableCurrency(amortizationData.yearly_principal_paid_total[index])}</td>
+            <td>${formatTableCurrency(amortizationData.yearly_interest_paid_total[index] + amortizationData.yearly_principal_paid_total[index])}</td>
+            <td>${formatTableCurrency(totalToPay - amortizationData.yearly_principal_paid_total[index] - amortizationData.yearly_interest_paid_total[index])}</td>
         `;
         yearlyTableBody.appendChild(row);
-    }
+    });
 
     // Populate monthly table (initially for the first year)
-    populateMonthlyTable(1, amortizationData);
+    populateMonthlyTable(amortizationData.all_years[0], amortizationData, totalToPay);
 
     // Set up year selector for monthly table
     const prevYearBtn = document.getElementById('prev-year');
     const nextYearBtn = document.getElementById('next-year');
     const selectedYearSpan = document.getElementById('selected-year');
-    let currentYear = 1;
+
+    selectedYearSpan.textContent = 'Año ' + amortizationData.all_years[0];
+    let currentYearIndex = 0;
 
     prevYearBtn.addEventListener('click', () => {
-        if (currentYear > 1) {
-            currentYear--;
-            selectedYearSpan.textContent = `Año ${currentYear}`;
-            populateMonthlyTable(currentYear, amortizationData);
+        if (currentYearIndex > 0) {
+            currentYearIndex--;
+            selectedYearSpan.textContent = 'Año ' + amortizationData.all_years[currentYearIndex];
+            populateMonthlyTable(amortizationData.all_years[currentYearIndex], amortizationData, totalToPay);
         }
     });
 
     nextYearBtn.addEventListener('click', () => {
-        if (currentYear < yearsCount) {
-            currentYear++;
-            selectedYearSpan.textContent = `Año ${currentYear}`;
-            populateMonthlyTable(currentYear, amortizationData);
+        if (currentYearIndex < amortizationData.all_years.length - 1) {
+            currentYearIndex++;
+            selectedYearSpan.textContent = 'Año ' + amortizationData.all_years[currentYearIndex];
+            populateMonthlyTable(amortizationData.all_years[currentYearIndex], amortizationData, totalToPay);
         }
     });
 }
 
-function populateMonthlyTable(year, amortizationData) {
+function populateMonthlyTable(year, amortizationData, totalToPay) {
     const monthlyTableBody = document.getElementById('monthly-table-body');
     monthlyTableBody.innerHTML = '';
 
-    const startIndex = (year - 1) * 12;
-    const endIndex = Math.min(startIndex + 12, amortizationData.principal_left.length);
+    const startIndex = amortizationData.all_months.findIndex(month => month.slice(0, 4) === year.toString());
+    const endIndex = amortizationData.all_months.findIndex(month => month.slice(0, 4) === (year + 1).toString());
+    const finalEndIndex = endIndex === -1 ? amortizationData.all_months.length : endIndex;
 
-    for (let i = startIndex; i < endIndex; i++) {
+    for (let i = startIndex; i < finalEndIndex; i++) {
         const row = document.createElement('tr');
+        const date = new Date(amortizationData.all_months[i]);
         row.innerHTML = `
-            <td>${(i % 12) + 1}</td>
-            <td>${formatCurrency(amortizationData.monthly_interest_paid[i])}</td>
-            <td>${formatCurrency(amortizationData.monthly_principal_paid[i])}</td>
-            <td>${formatCurrency(amortizationData.monthly_interest_paid[i] + amortizationData.monthly_principal_paid[i])}</td>
-            <td>${formatCurrency(amortizationData.principal_left[i])}</td>
+            <td>${date.toLocaleString('es-ES', { month: 'long', year: 'numeric' }).replace(/^\w/, c => c.toUpperCase())}</td>
+            <td>${formatTableCurrency(amortizationData.interest_paid_total[i])}</td>
+            <td>${formatTableCurrency(amortizationData.principal_paid_total[i])}</td>
+            <td>${formatTableCurrency(amortizationData.interest_paid_total[i] + amortizationData.principal_paid_total[i])}</td>
+            <td>${formatTableCurrency(totalToPay - amortizationData.principal_paid_total[i] - amortizationData.interest_paid_total[i])}</td>
         `;
         monthlyTableBody.appendChild(row);
     }
 }
 
-function formatCurrency(value) {
-    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value);
+function formatTableCurrency(value) {
+    return new Intl.NumberFormat('es-ES', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
 }
 
 async function calculateMortgage(input_data) {

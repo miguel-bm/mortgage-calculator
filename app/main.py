@@ -33,6 +33,7 @@ class MortgageRequest(BaseModel):
 
 class AmortizationResponse(BaseModel):
     all_months: list[date]
+    all_years: list[int]
     total_paid: list[float]
     total_left: list[float]
     principal_paid_total: list[float]
@@ -43,6 +44,8 @@ class AmortizationResponse(BaseModel):
     monthly_principal_paid: list[float]
     yearly_interest_paid: list[float]
     yearly_principal_paid: list[float]
+    yearly_interest_paid_total: list[float]
+    yearly_principal_paid_total: list[float]
 
 
 class MortgageResponse(BaseModel):
@@ -116,11 +119,14 @@ async def calculate_amortization(
         monthly_interest_paid.append(interest_payment)
         monthly_principal_paid.append(principal_payment)
 
+    all_months = [initial_month + relativedelta(months=i) for i in range(num_payments)]
+    all_years = [month.year for month in all_months]
+    all_years = list(dict.fromkeys(all_years))
+
     yearly_interest_paid = []
     yearly_principal_paid = []
-
-    all_months = [initial_month + relativedelta(months=i) for i in range(num_payments)]
-
+    yearly_interest_paid_total = []
+    yearly_principal_paid_total = []
     total_interest_paid_year = 0
     total_principal_paid_year = 0
     current_year = initial_month.year
@@ -129,6 +135,8 @@ async def calculate_amortization(
         if month.year != current_year:
             yearly_interest_paid.append(total_interest_paid_year)
             yearly_principal_paid.append(total_principal_paid_year)
+            yearly_interest_paid_total.append(sum(yearly_interest_paid))
+            yearly_principal_paid_total.append(sum(yearly_principal_paid))
             total_interest_paid_year = 0
             total_principal_paid_year = 0
             current_year = month.year
@@ -136,14 +144,15 @@ async def calculate_amortization(
         total_interest_paid_year += monthly_interest_paid[i]
         total_principal_paid_year += monthly_principal_paid[i]
 
-    else:
-        if total_interest_paid_year > 0:
-            yearly_interest_paid.append(total_interest_paid_year)
-        if total_principal_paid_year > 0:
-            yearly_principal_paid.append(total_principal_paid_year)
+    # Add the last year's data
+    yearly_interest_paid.append(total_interest_paid_year)
+    yearly_principal_paid.append(total_principal_paid_year)
+    yearly_interest_paid_total.append(sum(yearly_interest_paid))
+    yearly_principal_paid_total.append(sum(yearly_principal_paid))
 
     return AmortizationResponse(
         all_months=all_months,
+        all_years=all_years,
         total_paid=total_paid,
         total_left=total_left,
         principal_paid_total=principal_paid_total,
@@ -154,6 +163,8 @@ async def calculate_amortization(
         monthly_principal_paid=monthly_principal_paid,
         yearly_interest_paid=yearly_interest_paid,
         yearly_principal_paid=yearly_principal_paid,
+        yearly_interest_paid_total=yearly_interest_paid_total,
+        yearly_principal_paid_total=yearly_principal_paid_total,
     )
 
 
