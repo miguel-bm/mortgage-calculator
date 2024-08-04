@@ -265,6 +265,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from mangum import Mangum
+# from mangum import Mangum
 
-handler = Mangum(app)
+
+# handler = Mangum(app)
+@app.get("/api/python")
+def hello_world():
+    return {"message": "Hello World"}
