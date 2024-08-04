@@ -245,7 +245,7 @@ select:focus {
 
 }
 
-button {
+.calculate-button {
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -663,6 +663,54 @@ button:hover {
     margin-top: 30px;
 }
 
+
+.table-tabs {
+    display: inline-flex;
+    background: none;
+    border-radius: 0;
+}
+
+.table-tab {
+    display: inline-block;
+    border-radius: 0;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Sarabun', sans-serif;
+    color: #767676;
+    transition: color 0.3s;
+    width: 100px;
+}
+
+.table-tab:hover {
+    color: var(--primary-color);
+    background-color: transparent;
+}
+
+.table-tab.active {
+    border-bottom: 4px solid var(--primary-color);
+    color: #333;
+    margin-bottom: -2px;
+    padding-bottom: 8px;
+}
+
+.table-tab-content {
+    background-color: transparent;
+    display: none;
+    padding: 20px 0px;
+    border-top: 2px solid var(--border-color);
+
+}
+
+.table-tab-content.active {
+    font-family: 'Sarabun', sans-serif;
+    display: block;
+}
+
+
 .year-selector {
     display: flex;
     justify-content: center;
@@ -677,11 +725,12 @@ button:hover {
     cursor: pointer;
     color: var(--primary-color);
     padding: 0 10px;
+    width: 100px;
 }
 
 #selected-year {
     font-weight: bold;
-    min-width: 60px;
+    width: 100px;
     text-align: center;
 }
 

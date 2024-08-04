@@ -489,6 +489,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     const tabs = document.querySelectorAll('.tab');
     const contents = document.querySelectorAll('.tab-content');
+
+    const tableTabs = document.querySelectorAll('.table-tab');
+    const tableContents = document.querySelectorAll('.table-tab-content');
+
     function updateSavingsFromPercent() {
         const price = parseFloat(priceInput.value.replace(/\D/g, ''));
         const savingsPercent = parseFloat(savingsPercentInput.value.replace(',', '.'));
@@ -534,6 +538,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
         });
     });
 
+    tableTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+
+            tableTabs.forEach(t => t.classList.remove('active'));
+            tableContents.forEach(c => c.classList.remove('active'));
+
+            tab.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
     savingsPercentInput.addEventListener('input', updateSavingsFromPercent);
     savingsInput.addEventListener('input', updatePercentFromSavings);
     priceInput.addEventListener('input', updateSavingsPercentFromPrice);
@@ -558,21 +574,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         onBlurYearsQuantityFormat(this, e);
     });
 
-    // Add event listeners for amortization tabs
-    const amortizationTabs = document.querySelectorAll('.amortization-tab');
-    const amortizationContents = document.querySelectorAll('.amortization-content');
-
-    amortizationTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabId = tab.getAttribute('data-tab');
-
-            amortizationTabs.forEach(t => t.classList.remove('active'));
-            amortizationContents.forEach(c => c.classList.remove('active'));
-
-            tab.classList.add('active');
-            document.getElementById(`${tabId}-table`).classList.add('active');
-        });
-    });
 });
 
 function updateMoneyQuantityFormat(inputElement, event) {

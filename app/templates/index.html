@@ -157,7 +157,7 @@
                         </div>
                     </div>
 
-                    <button type="submit">Calcular</button>
+                    <button class="calculate-button" type="submit">Calcular</button>
                 </form>
             </div>
 
@@ -166,7 +166,6 @@
                     <div class="tabs">
                         <button class="tab active" data-tab="payment">Pagos</button>
                         <button class="tab" data-tab="amortization">Amortización</button>
-                        <button class="tab" data-tab="analysis">Análisis</button>
                     </div>
                     <div id="payment" class="tab-content active">
                         <div class="kpis-container">
@@ -404,13 +403,12 @@
                             <canvas id="monthly-payment-chart"></canvas>
                         </div>
 
-                        <!-- New section -->
                         <div class="amortization-table-container">
-                            <div class="amortization-tabs">
-                                <button class="amortization-tab active" data-tab="yearly">Por año</button>
-                                <button class="amortization-tab" data-tab="monthly">Por mes</button>
+                            <div class="table-tabs">
+                                <button class="table-tab active" data-tab="yearly-table">Por año</button>
+                                <button class="table-tab" data-tab="monthly-table">Por mes</button>
                             </div>
-                            <div id="yearly-table" class="amortization-content active">
+                            <div id="yearly-table" class="table-tab-content active">
                                 <table class="amortization-table">
                                     <thead>
                                         <tr>
@@ -426,7 +424,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div id="monthly-table" class="tab-content">
+                            <div id="monthly-table" class="table-tab-content">
                                 <div class="year-selector">
                                     <button id="prev-year">&lt;</button>
                                     <span id="selected-year">2024</span>
@@ -449,10 +447,6 @@
                             </div>
                         </div>
 
-                    </div>
-                    <div id="analysis" class="tab-content">
-                        <h2>Análisis Financiero</h2>
-                        <p>En construcción.</p>
                     </div>
                 </div>
             </div>
