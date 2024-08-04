@@ -84,10 +84,7 @@ class MortgageResponse(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    content = FileResponse("static/index.html")
-    return HTMLResponse(
-        content=content.body, status_code=200, headers={"Content-Type": "text/html"}
-    )
+    return FileResponse("static/index.html")
 
 
 @app.post("/amortization", response_model=AmortizationResponse)
