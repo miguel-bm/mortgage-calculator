@@ -593,3 +593,61 @@ button:hover {
     font-weight: bold;
     margin-bottom: 5px;
 }
+
+.kpis-container.secondary-kpis {
+    margin-top: 20px;
+    padding: 0 15px;
+}
+
+.kpi-container {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 5px;
+}
+
+.kpi-label {
+    color: #666;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    max-width: 120px;
+    text-align: center;
+}
+
+.kpi-amount {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: baseline;
+}
+
+.kpi-amount .amount {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.kpi-amount .currency {
+    font-size: 18px;
+    color: #767676;
+    margin-left: 3px;
+}
+
+@media (max-width: 768px) {
+    .kpis-container.secondary-kpis {
+        flex-wrap: wrap;
+    }
+
+    .kpi-container {
+        flex-basis: 50%;
+        margin-bottom: 15px;
+    }
+}
