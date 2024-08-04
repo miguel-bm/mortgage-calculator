@@ -71,6 +71,10 @@ function displayResults(data) {
     document.getElementById('loan-amount').textContent = formatCurrencyNoEur(data.mortgage_amount);
     document.getElementById('total-interest').textContent = formatCurrencyNoEur(data.mortgage_interest);
     document.getElementById('total-loan-cost').textContent = formatCurrencyNoEur(data.mortgage_amount + data.mortgage_interest);
+    const finalDate = new Date(data.amortization.all_months[data.amortization.all_months.length - 1]);
+    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const formattedDate = `${monthNames[finalDate.getMonth()]} ${finalDate.getFullYear()}`;
+    document.getElementById('final-payment-date').textContent = formattedDate;
 
 
     //Update the amortization chart

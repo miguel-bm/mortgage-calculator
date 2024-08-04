@@ -595,7 +595,6 @@ button:hover {
 }
 
 .kpis-container.secondary-kpis {
-    margin-top: 20px;
     padding: 0 15px;
 }
 
@@ -614,10 +613,10 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     font-weight: bold;
     font-size: 14px;
-    max-width: 120px;
+    width: 150px;
     text-align: center;
 }
 
