@@ -1,19 +1,20 @@
 from datetime import date, timedelta
-from pathlib import Path
 
 from dateutil.relativedelta import relativedelta
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 app = FastAPI()
-templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
-app.mount(
-    path="/static",
-    app=StaticFiles(directory=str(Path(__file__).parent / "static")),
-    name="static",
+app.mount(path="/static", app=StaticFiles(directory="static"), name="static")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust this to your specific needs
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 TAX_RATES = {
@@ -83,7 +84,7 @@ class MortgageResponse(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    content = templates.TemplateResponse("index.html", {"request": request})
+    content = FileResponse("static/index.html")
     return HTMLResponse(
         content=content.body, status_code=200, headers={"Content-Type": "text/html"}
     )
