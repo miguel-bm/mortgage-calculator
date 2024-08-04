@@ -13,7 +13,7 @@ templates = Jinja2Templates(directory="static")
 app.mount(path="/static", app=StaticFiles(directory="static"), name="static")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust this to your specific needs
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
