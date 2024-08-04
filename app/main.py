@@ -3,7 +3,6 @@ from pathlib import Path
 
 from dateutil.relativedelta import relativedelta
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -254,21 +253,3 @@ async def calculate_mortgage(request: MortgageRequest) -> MortgageResponse:
     except Exception as e:
         print(f"Error calculating mortgage: {e}")
         raise HTTPException(status_code=422, detail=f"Error calculating mortgage: {e}")
-
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# from mangum import Mangum
-
-
-# handler = Mangum(app)
-@app.get("/api/python")
-def hello_world():
-    return {"message": "Hello World"}
