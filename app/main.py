@@ -29,6 +29,17 @@ class MortgageRequest(BaseModel):
     is_second_hand: bool = False
 
 
+class AmortizationResponse(BaseModel):
+    total_paid: list[float]
+    total_left: list[float]
+    principal_paid_total: list[float]
+    interest_paid_total: list[float]
+    principal_left: list[float]
+    interests_left: list[float]
+    monthly_interest_paid: list[float]
+    monthly_principal_paid: list[float]
+
+
 class MortgageResponse(BaseModel):
     inputs: MortgageRequest
     monthly_payment: float
@@ -43,11 +54,69 @@ class MortgageResponse(BaseModel):
     appraisal_expenses: float
     total_expenses: float
     total_cost: float
+    amortization: AmortizationResponse
 
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.post("/amortization", response_model=AmortizationResponse)
+async def calculate_amortization(
+    mortgage_amount: float,
+    monthly_payment: float,
+    annual_rate_percent: float,
+    timeframe_years: int,
+) -> AmortizationResponse:
+    monthly_rate = (annual_rate_percent / 100) / 12
+    num_payments = timeframe_years * 12
+
+    # Calculate total interest over the lifetime of the loan
+    total_interest = (monthly_payment * num_payments) - mortgage_amount
+
+    total_paid = []
+    total_left = []
+    principal_paid_total = []
+    interest_paid_total = []
+    principal_left = []
+    interests_left = []
+    monthly_interest_paid = []
+    monthly_principal_paid = []
+
+    remaining_balance = mortgage_amount
+    remaining_interest = total_interest
+    total_interest_paid = 0
+    total_principal_paid = 0
+
+    for _ in range(num_payments):
+        interest_payment = remaining_balance * monthly_rate
+        principal_payment = monthly_payment - interest_payment
+
+        total_interest_paid += interest_payment
+        total_principal_paid += principal_payment
+        remaining_balance -= principal_payment
+        remaining_interest -= interest_payment
+
+        total_paid.append(total_principal_paid + total_interest_paid)
+        principal_paid_total.append(total_principal_paid)
+        interest_paid_total.append(total_interest_paid)
+        principal_left.append(remaining_balance)
+        interests_left.append(remaining_interest)
+        total_left.append(remaining_balance + remaining_interest)
+        monthly_interest_paid.append(interest_payment)
+        monthly_principal_paid.append(principal_payment)
+
+    return AmortizationResponse(
+        total_paid=total_paid,
+        total_left=total_left,
+        principal_paid_total=principal_paid_total,
+        interest_paid_total=interest_paid_total,
+        principal_left=principal_left,
+        interests_left=interests_left,
+        monthly_interest_paid=monthly_interest_paid,
+        monthly_principal_paid=monthly_principal_paid,
+    )
 
 
 @app.post("/calculate", response_model=MortgageResponse)
@@ -102,6 +171,13 @@ async def calculate_mortgage(request: MortgageRequest) -> MortgageResponse:
         # Calculate interest percent
         interest_percent = (mortgage_interest / mortgage_amount) * 100
 
+        amortization_results = await calculate_amortization(
+            mortgage_amount,
+            monthly_payment,
+            request.annual_rate_percent,
+            request.timeframe_years,
+        )
+
         return MortgageResponse(
             inputs=MortgageRequest(
                 price=price,
@@ -123,6 +199,7 @@ async def calculate_mortgage(request: MortgageRequest) -> MortgageResponse:
             appraisal_expenses=appraisal_expenses,
             total_expenses=total_expenses,
             total_cost=total_cost,
+            amortization=amortization_results,
         )
     except Exception as e:
         print(f"Error calculating mortgage: {e}")
