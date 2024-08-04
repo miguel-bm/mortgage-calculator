@@ -11,6 +11,7 @@ const placeholderData = {
 const form = document.getElementById('mortgage-form');
 const resultsContainer = document.getElementById('results');
 let resultsChart;
+let amortizationChart;
 
 function displayResults(data) {
     // Update the monthly payment amount in the UI
@@ -64,44 +65,80 @@ function displayResults(data) {
     setBarHeight('.right-graph .price-bar', data.inputs.price, totalLeft);
     setBarHeight('.right-graph .expenses-bar', data.total_expenses, totalLeft);
     document.body.offsetHeight;
+
+
+    //Update the amortization chart
+    updateAmortizationChart(data.amortization);
 }
 
-function updateChart(data) {
-    const ctx = document.getElementById('results-chart').getContext('2d');
+function updateAmortizationChart(amortizationData) {
+    const ctx = document.getElementById('amortization-chart').getContext('2d');
 
-    if (resultsChart) {
-        resultsChart.destroy();
-    }
+    // Prepare the data for the chart
+    const labels = Array.from({ length: amortizationData.principal_left.length }, (_, i) => i + 1);
+    const chartData = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Intereses pendientes',
+                data: amortizationData.interests_left,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                fill: true,
+            },
+            {
+                label: 'Capital pendiente',
+                data: amortizationData.principal_left,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                fill: true,
+            }
+        ]
+    };
 
-    resultsChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Importe hipoteca', 'Intereses', 'Gastos totales'],
-            datasets: [{
-                label: 'Desglose de costes',
-                data: [data.mortgage_amount, data.mortgage_interest, data.total_expenses],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.6)',
-                    'rgba(255, 99, 132, 0.6)',
-                    'rgba(75, 192, 192, 0.6)'
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-            }]
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Meses'
+                },
+                stacked: true
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Cantidad (€)'
+                },
+                stacked: true
+            }
         },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+        plugins: {
+            title: {
+                display: true,
+                text: 'Amortización de la hipoteca'
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false
             }
         }
-    });
+    };
+
+    if (amortizationChart) {
+        // If the chart already exists, update its data
+        amortizationChart.data = chartData;
+        amortizationChart.update();
+    } else {
+        // If the chart doesn't exist, create a new one
+        amortizationChart = new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: chartOptions
+        });
+    }
 }
 
 async function calculateMortgage(input_data) {

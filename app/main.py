@@ -75,6 +75,11 @@ async def calculate_amortization(
     # Calculate total interest over the lifetime of the loan
     total_interest = (monthly_payment * num_payments) - mortgage_amount
 
+    remaining_balance = mortgage_amount
+    remaining_interest = total_interest
+    total_interest_paid = 0
+    total_principal_paid = 0
+
     total_paid = []
     total_left = []
     principal_paid_total = []
@@ -83,11 +88,6 @@ async def calculate_amortization(
     interests_left = []
     monthly_interest_paid = []
     monthly_principal_paid = []
-
-    remaining_balance = mortgage_amount
-    remaining_interest = total_interest
-    total_interest_paid = 0
-    total_principal_paid = 0
 
     for _ in range(num_payments):
         interest_payment = remaining_balance * monthly_rate
