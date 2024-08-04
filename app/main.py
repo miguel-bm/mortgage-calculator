@@ -1,14 +1,15 @@
 from datetime import date, timedelta
 
-import aiofiles
 from dateutil.relativedelta import relativedelta
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 app = FastAPI()
+templates = Jinja2Templates(directory="static")
 app.mount(path="/static", app=StaticFiles(directory="static"), name="static")
 app.add_middleware(
     CORSMiddleware,
@@ -83,17 +84,9 @@ class MortgageResponse(BaseModel):
     amortization: AmortizationResponse
 
 
-# @app.get("/", response_class=HTMLResponse)
-# async def read_root(request: Request):
-#     return FileResponse("static/index.html")
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    try:
-        async with aiofiles.open("static/index.html", mode="r") as file:
-            content = await file.read()
-        return HTMLResponse(content=content)
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Index file not found")
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.post("/amortization", response_model=AmortizationResponse)

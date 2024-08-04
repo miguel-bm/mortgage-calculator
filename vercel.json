@@ -16,7 +16,7 @@
             "dest": "/static/$1"
         },
         {
-            "src": "/(.*)",
+            "src": "/",
             "dest": "app/main.py"
         }
     ]
