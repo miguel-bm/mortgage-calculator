@@ -1,0 +1,5 @@
+fastapi
+pydantic
+python-dateutil
+jinja2
+mangum
