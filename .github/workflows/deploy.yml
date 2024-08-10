@@ -1,0 +1,30 @@
+name: Deploy to Vultr
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.VULTR_SSH_PRIVATE_KEY }}
+        known_hosts: ${{ secrets.VULTR_KNOWN_HOSTS }}
+
+    - name: Deploy to Vultr
+      env:
+        VULTR_HOST: ${{ secrets.VULTR_HOST }}
+        VULTR_USER: ${{ secrets.VULTR_USER }}
+      run: |
+        scp -r . $VULTR_USER@$VULTR_HOST:/root/projects/mortgage-calculator
+        ssh $VULTR_USER@$VULTR_HOST << EOF
+          cd /root/projects/mortgage-calculator
+          docker-compose build
+          docker-compose down
+          docker-compose up -d
+        EOF
