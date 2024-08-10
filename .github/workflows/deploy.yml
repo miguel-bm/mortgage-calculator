@@ -22,8 +22,8 @@ jobs:
         VULTR_USER: ${{ secrets.VULTR_USER }}
         PROJECT_PATH: /root/projects/mortgage-calculator
       run: |
-        # Create a tarball of the current directory
-        tar -czf deploy.tar.gz .
+        # Create a tarball of the current directory, excluding the .git directory and any potential lock files
+        tar --exclude='.git' --exclude='*.lock' -czf deploy.tar.gz .
 
         # Copy the tarball to the server
         scp deploy.tar.gz $VULTR_USER@$VULTR_HOST:$PROJECT_PATH/
