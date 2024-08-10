@@ -47,8 +47,3 @@ tests/
 # Documentation
 docs/
 *.md
-
-# Other common excludes
-*.bak
-*.tar.gz
-*.zip
