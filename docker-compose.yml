@@ -1,13 +1,19 @@
 version: '3.8'
 
 services:
-  web:
+  mortgagecalculator:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    networks:
+      - webnet
     volumes:
       - .:/app
     environment:
       - PORT=8000
+
+networks:
+  webnet:
+    external: true
