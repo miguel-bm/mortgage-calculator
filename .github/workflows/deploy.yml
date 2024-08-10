@@ -16,27 +16,22 @@ jobs:
         key: ${{ secrets.VULTR_SSH_PRIVATE_KEY }}
         known_hosts: ${{ secrets.VULTR_KNOWN_HOSTS }}
 
+    - name: Install rsync
+      run: sudo apt-get update && sudo apt-get install -y rsync
+
     - name: Deploy to Vultr
       env:
         VULTR_HOST: ${{ secrets.VULTR_HOST }}
         VULTR_USER: ${{ secrets.VULTR_USER }}
         PROJECT_PATH: /root/projects/mortgage-calculator
       run: |
-        # Create a tarball of the current directory, excluding the .git directory and any potential lock files
-        tar --exclude='.git' --exclude='*.lock' -czf deploy.tar.gz .
-
-        # Copy the tarball to the server
-        scp deploy.tar.gz $VULTR_USER@$VULTR_HOST:$PROJECT_PATH/
+        # Sync files to the server, excluding .git and lock files
+        rsync -avz --delete --exclude='.git' --exclude='*.lock' ./ $VULTR_USER@$VULTR_HOST:$PROJECT_PATH/
 
         # SSH into the server and execute commands
         ssh $VULTR_USER@$VULTR_HOST << EOF
           cd $PROJECT_PATH
-          tar -xzf deploy.tar.gz
           docker-compose down
           docker-compose build
           docker-compose up -d
-          rm deploy.tar.gz
         EOF
-
-        # Clean up local tarball
-        rm deploy.tar.gz
