@@ -20,11 +20,23 @@ jobs:
       env:
         VULTR_HOST: ${{ secrets.VULTR_HOST }}
         VULTR_USER: ${{ secrets.VULTR_USER }}
+        PROJECT_PATH: /root/projects/mortgage-calculator
       run: |
-        scp -r . $VULTR_USER@$VULTR_HOST:/root/projects/mortgage-calculator
+        # Create a tarball of the current directory
+        tar -czf deploy.tar.gz .
+
+        # Copy the tarball to the server
+        scp deploy.tar.gz $VULTR_USER@$VULTR_HOST:$PROJECT_PATH/
+
+        # SSH into the server and execute commands
         ssh $VULTR_USER@$VULTR_HOST << EOF
-          cd /root/projects/mortgage-calculator
-          docker-compose build
+          cd $PROJECT_PATH
+          tar -xzf deploy.tar.gz
           docker-compose down
+          docker-compose build
           docker-compose up -d
+          rm deploy.tar.gz
         EOF
+
+        # Clean up local tarball
+        rm deploy.tar.gz
