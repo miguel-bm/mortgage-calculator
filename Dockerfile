@@ -16,7 +16,13 @@ COPY requirements.txt .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code into the container
+# Copy the app directory first
+COPY app ./app
+
+# Copy the static directory separately
+COPY static ./static
+
+# Copy any remaining files
 COPY . .
 
 # Make port 8000 available to the world outside this container
