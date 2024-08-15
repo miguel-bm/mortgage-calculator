@@ -333,6 +333,31 @@
                         </div>
                     </div>
                     <div id="amortization" class="tab-content">
+                        <div class="extra-payments-box">
+                            <h3>Opcional: pagos adicionales</h3>
+                            <div class="input-group">
+                                <label for="loan-start-date">Fecha de inicio del préstamo</label>
+                                <input type="date" id="loan-start-date" name="loan-start-date">
+                            </div>
+                            <div id="extra-payments-container">
+                                <div class="extra-payment-row">
+                                    <div class="input-group">
+                                        <label for="extra-payment-amount-1">Cantidad</label>
+                                        <div class="money-input">
+                                            <input type="text" id="extra-payment-amount-1"
+                                                name="extra-payment-amount-1">
+                                            <span class="unit">€</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="extra-payment-date-1">Fecha</label>
+                                        <input type="date" id="extra-payment-date-1" name="extra-payment-date-1">
+                                    </div>
+                                    <button class="delete-extra-payment" type="button">&times;</button>
+                                </div>
+                            </div>
+                            <button id="add-extra-payment" type="button">Añadir pago adicional</button>
+                        </div>
 
                         <div class="kpis-container secondary-kpis">
                             <div class="kpi-container">
